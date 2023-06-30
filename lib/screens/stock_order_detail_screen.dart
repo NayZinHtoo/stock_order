@@ -59,7 +59,7 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                   children: [
                     Text('Slip Number: ${widget.stockHeader.slipNumber!}'),
                     const Text(
-                        '----------------------------------------------------------------'),
+                        '---------------------------------------------------------------'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +88,7 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                       ],
                     ),
                     const Text(
-                        '----------------------------------------------------------------'),
+                        '---------------------------------------------------------------'),
                   ]),
             ),
             Expanded(

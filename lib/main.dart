@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_pos/utils/color_schemes.g.dart';
 import '../providers/stock_item_provider.dart';
 import '../screens/stock_list_screen.dart';
 import '../providers/stock_order_provider.dart';
@@ -24,13 +25,23 @@ class MyApp extends StatelessWidget {
         title: 'Stock Pos',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: const Color(0xFF004E53),
-          scaffoldBackgroundColor: Colors.white,
-          cardColor: Colors.white,
-          colorScheme: ColorScheme.fromSwatch()
-              .copyWith(secondary: const Color(0xff02432e)),
-        ),
-        home: StockListScreen(title: 'Stock Pos'),
+            colorScheme: lightColorScheme,
+            useMaterial3: true,
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(width: 0, color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(width: 0, color: Colors.white),
+              ),
+              filled: true,
+              fillColor: lightColorScheme.surfaceVariant,
+              border: InputBorder.none,
+            )),
+        darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+        home: const StockListScreen(title: 'Stock Pos'),
       ),
     );
   }

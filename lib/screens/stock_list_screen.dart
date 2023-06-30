@@ -228,9 +228,10 @@ class _StockListScreenState extends State<StockListScreen> {
                                                     ? const Text(
                                                         'REMOVE',
                                                         style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: Colors.white,
+                                                        ),
                                                       )
                                                     : const Row(
                                                         mainAxisSize:
@@ -252,6 +253,7 @@ class _StockListScreenState extends State<StockListScreen> {
                                                             Icons
                                                                 .shopping_cart_sharp,
                                                             size: 17,
+                                                            color: Colors.white,
                                                           ),
                                                         ],
                                                       ),

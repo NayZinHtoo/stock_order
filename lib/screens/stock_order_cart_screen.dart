@@ -28,7 +28,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
 
   void showToast() {
     Fluttertoast.showToast(
-        msg: 'Your order is comfirmed',
+        msg: 'Your order is confirmed',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.black,
