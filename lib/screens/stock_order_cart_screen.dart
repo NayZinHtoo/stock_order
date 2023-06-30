@@ -162,7 +162,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                                               .qtyCalculate(
                                                                   index: index,
                                                                   isIncreased:
-                                                                      true);
+                                                                      false);
                                                         },
                                                         icon: const Icon(Icons
                                                             .chevron_left)),
@@ -177,7 +177,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                                               .qtyCalculate(
                                                                   index: index,
                                                                   isIncreased:
-                                                                      false);
+                                                                      true);
                                                         },
                                                         icon: const Icon(Icons
                                                             .chevron_right))

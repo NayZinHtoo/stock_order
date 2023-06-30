@@ -75,15 +75,15 @@ class StockOrderProvider extends ChangeNotifier {
   }
 
   orderStockItem(List<StockDetail> stockItemList) async {
-    // await controller.readMaxSlipNoforHeader().then((value) {
-    //   if (value[0] == null) {
-    //     slipNumber = 1;
-    //   } else {
-    //     slipNumber = value[0].slipNumber! + 1;
-    //   }
-    // });
-    var maxSlipNo = await controller.getHeaderLength();
-    slipNumber = maxSlipNo + 1;
+    await controller.readMaxSlipNoforHeader().then((value) {
+      if (value.isEmpty) {
+        slipNumber = 1;
+      } else {
+        slipNumber = value[0].slipNumber! + 1;
+      }
+    });
+    //var maxSlipNo = await controller.getHeaderLength();
+    //slipNumber = maxSlipNo + 1;
 
     var stockHeader = StockHeader(
       slipNumber: slipNumber,
