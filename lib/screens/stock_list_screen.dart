@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_pos/models/stock_detail.dart';
 import 'package:stock_pos/providers/stock_order_provider.dart';
+import 'package:stock_pos/screens/stock_item_detail_screen.dart';
 import 'package:stock_pos/screens/stock_order_cart_screen.dart';
 import 'package:stock_pos/screens/stock_order_header_list_screen.dart';
 import '../providers/stock_item_provider.dart';
@@ -173,159 +174,202 @@ class _StockListScreenState extends State<StockListScreen> {
                             child: ListView.builder(
                               itemCount: provider.stockItemList.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Card(
-                                  elevation: 8,
-                                  margin: const EdgeInsets.symmetric(
-                                    vertical: 10,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Row(children: [
-                                      Image.asset(
-                                        '${provider.stockItemList[index].image}',
-                                        width: 100,
-                                        height: 100,
-                                        fit: BoxFit.fill,
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            StockIemDetailScreen(
+                                                stockItem: provider
+                                                    .stockItemList
+                                                    .toList()[index]),
                                       ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  '${provider.stockItemList[index].id}'),
-                                              Text(
-                                                  '${provider.stockItemList[index].name}'),
-                                              Text(
-                                                '${provider.stockItemList[index].description}',
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 3,
-                                              ),
-                                              Text(
-                                                '${thousandsSeparatorsFormat(provider.stockItemList[index].price!)} MMK',
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 3,
-                                              ),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: provider
+                                    );
+                                  },
+                                  child: Card(
+                                    elevation: 8,
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image.asset(
+                                              '${provider.stockItemList[index].image}',
+                                              width: 100,
+                                              height: 150,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '${provider.stockItemList[index].id}',
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${provider.stockItemList[index].name}',
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '    ${provider.stockItemList[index].description}',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                    ),
+                                                    Text(
+                                                      '${thousandsSeparatorsFormat(provider.stockItemList[index].price!)} MMK',
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontStyle:
+                                                              FontStyle.italic),
+                                                    ),
+                                                    ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: provider
+                                                                    .stockItemList[
+                                                                        index]
+                                                                    .isSlelected ==
+                                                                true
+                                                            ? Theme.of(context)
+                                                                .colorScheme
+                                                                .error
+                                                            : AppColor
+                                                                .greenColor,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                        ),
+                                                      ),
+                                                      child: provider
+                                                                  .stockItemList[
+                                                                      index]
+                                                                  .isSlelected ==
+                                                              true
+                                                          ? const Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              children: [
+                                                                Text(
+                                                                  'REMOVE',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          : const Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  'ADD',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 5.0,
+                                                                ),
+                                                                Icon(
+                                                                  Icons
+                                                                      .shopping_cart_sharp,
+                                                                  size: 17,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                      onPressed: () {
+                                                        provider
+                                                            .setStockItemSelected(
+                                                          provider
                                                               .stockItemList[
                                                                   index]
-                                                              .isSlelected ==
-                                                          true
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .error
-                                                      : AppColor.greenColor,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                  ),
-                                                ),
-                                                child: provider
+                                                              .id!,
+                                                        );
+                                                        if (provider
                                                             .stockItemList[
                                                                 index]
-                                                            .isSlelected ==
-                                                        true
-                                                    ? const Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        children: [
-                                                          Text(
-                                                            'REMOVE',
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : const Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            'ADD',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 5.0,
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .shopping_cart_sharp,
-                                                            size: 17,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                onPressed: () {
-                                                  provider.setStockItemSelected(
-                                                    provider
-                                                        .stockItemList[index]
-                                                        .id!,
-                                                  );
-                                                  if (provider
-                                                      .stockItemList[index]
-                                                      .isSlelected) {
-                                                    var syskey =
-                                                        generatesyskey();
-                                                    final StockDetail
-                                                        stockDetail =
-                                                        StockDetail(
-                                                            syskey: syskey,
-                                                            stkId: provider
-                                                                .stockItemList[
-                                                                    index]
-                                                                .id,
-                                                            stkName: provider
-                                                                .stockItemList[
-                                                                    index]
-                                                                .name,
-                                                            qty: 1,
-                                                            stkprice: provider
-                                                                .stockItemList[
-                                                                    index]
-                                                                .price,
-                                                            amount: provider
-                                                                .stockItemList[
-                                                                    index]
-                                                                .price,
-                                                            status: 0);
-                                                    stockOrderProvider
-                                                        .addStockOrderItem(
-                                                            stockDetail);
-                                                  } else {
-                                                    stockOrderProvider
-                                                        .removeStockOrderItem(
-                                                            provider
-                                                                .stockItemList[
-                                                                    index]
-                                                                .id!);
-                                                  }
-                                                },
+                                                            .isSlelected) {
+                                                          var syskey =
+                                                              generatesyskey();
+                                                          final StockDetail stockDetail = StockDetail(
+                                                              syskey: syskey,
+                                                              stkId: provider
+                                                                  .stockItemList[
+                                                                      index]
+                                                                  .id,
+                                                              stkName: provider
+                                                                  .stockItemList[
+                                                                      index]
+                                                                  .name,
+                                                              qty: 1,
+                                                              stkprice: provider
+                                                                  .stockItemList[
+                                                                      index]
+                                                                  .price,
+                                                              amount: provider
+                                                                  .stockItemList[
+                                                                      index]
+                                                                  .price,
+                                                              status: 0);
+                                                          stockOrderProvider
+                                                              .addStockOrderItem(
+                                                                  stockDetail);
+                                                        } else {
+                                                          stockOrderProvider
+                                                              .removeStockOrderItem(
+                                                                  provider
+                                                                      .stockItemList[
+                                                                          index]
+                                                                      .id!);
+                                                        }
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ]),
+                                            )
+                                          ]),
+                                    ),
                                   ),
                                 );
                               },

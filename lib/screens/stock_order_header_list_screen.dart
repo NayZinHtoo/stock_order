@@ -66,53 +66,106 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
                                 )),
                       );
                     },
-                    child: Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: Text(
-                                'System Key: ${provider.stockHeaderList[index].syskey}'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                      'SlipNumber : ${provider.stockHeaderList[index].slipNumber}'),
+                    child: Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.horizontal,
+                      onDismissed: (direction) {
+                        provider
+                            .removeStockHeader(provider.stockHeaderList[index]);
+                      },
+                      confirmDismiss: (direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Confirm"),
+                              content: const Text(
+                                  "Are you sure you wish to delete this item?"),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text("Yes")),
+                                ElevatedButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text("No"),
                                 ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                    'Amount: ${thousandsSeparatorsFormat(provider.stockHeaderList[index].amount!)} MMK',
-                                    textAlign: TextAlign.left,
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      background: Container(
+                        decoration: ShapeDecoration(
+                          color: Colors.red,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                        ),
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.delete_sweep, color: Colors.white),
+                            Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                      child: Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Text(
+                                  'System Key: ${provider.stockHeaderList[index].syskey}'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    flex: 1,
+                                    child: Text(
+                                        'SlipNumber : ${provider.stockHeaderList[index].slipNumber}'),
                                   ),
-                                ),
-                              ],
+                                  Flexible(
+                                    flex: 1,
+                                    child: Text(
+                                      'Amount: ${thousandsSeparatorsFormat(provider.stockHeaderList[index].amount!)} MMK',
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                    'Date: ${provider.stockHeaderList[index].date}'),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text('${provider.stockHeaderList[index].time}'),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      'Date: ${provider.stockHeaderList[index].date}'),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                      '${provider.stockHeaderList[index].time}'),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

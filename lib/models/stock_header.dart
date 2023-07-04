@@ -14,7 +14,7 @@ class StockHeader {
     this.amount,
     this.date,
     this.time,
-    this.status = 0,
+    this.status = 1,
   });
 
   StockHeader.fromMap(Map<String, dynamic> result)

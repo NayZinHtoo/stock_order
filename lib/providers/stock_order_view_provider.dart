@@ -32,4 +32,10 @@ class StockOrderViewProvider extends ChangeNotifier {
     totalQty = stockDetailList.fold(0, (previous, item) => previous + item.qty);
     notifyListeners();
   }
+
+  Future<void> removeStockHeader(StockHeader stockHeader) async {
+    await controller.updateStockHeaderStatus(stockHeader.id!);
+    stockHeaderList.remove(stockHeader);
+    notifyListeners();
+  }
 }

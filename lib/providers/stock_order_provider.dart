@@ -91,7 +91,7 @@ class StockOrderProvider extends ChangeNotifier {
       amount: totalAmount,
       date: DateFormat('dd/MM/yyyy').format(DateTime.now()),
       time: DateFormat('HH:mm:ss a').format(DateTime.now()),
-      status: 0,
+      status: 1,
     );
 
     await controller.insertStockHeader(stockHeader);
