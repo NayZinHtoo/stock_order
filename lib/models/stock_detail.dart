@@ -1,6 +1,7 @@
 class StockDetail {
   int? id;
-  int? parentId;
+  String? syskey;
+  String? parentId;
   int? stkId;
   String? stkName;
   int qty;
@@ -10,6 +11,7 @@ class StockDetail {
 
   StockDetail({
     this.id,
+    this.syskey,
     this.parentId,
     this.stkId,
     this.stkName,
@@ -21,6 +23,7 @@ class StockDetail {
 
   StockDetail.fromMap(Map<String, dynamic> result)
       : id = result["id"],
+        syskey = result["syskey"],
         parentId = result["parentId"],
         stkId = result["stkId"],
         stkName = result["stkName"],
@@ -31,6 +34,7 @@ class StockDetail {
 
   Map<String, Object> toMap() {
     return {
+      'syskey': syskey!,
       'parentId': parentId!,
       'stkId': stkId!,
       'stkName': stkName!,

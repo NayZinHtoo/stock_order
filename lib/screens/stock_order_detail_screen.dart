@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:stock_pos/models/stock_header.dart';
 
 import '../providers/stock_order_view_provider.dart';
+import '../utils/constant.dart';
 
 class StockOrderDetailScreen extends StatefulWidget {
   final StockHeader stockHeader;
@@ -23,7 +24,7 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
     stockOrderViewProvider =
         Provider.of<StockOrderViewProvider>(context, listen: false);
 
-    stockOrderViewProvider.getStockDetailList(widget.stockHeader.id!);
+    stockOrderViewProvider.getStockDetailList(widget.stockHeader.syskey!);
 
     super.initState();
   }
@@ -84,7 +85,8 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('Amount'),
-                        Text('${widget.stockHeader.amount} MMK'),
+                        Text(
+                            '${thousandsSeparatorsFormat(widget.stockHeader.amount!)} MMK'),
                       ],
                     ),
                     const Text(
@@ -99,9 +101,9 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                   itemCount: provider.stockDetailList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Card(
-                      margin: const EdgeInsets.all(18),
+                      //margin: const EdgeInsets.all(18),
                       child: Padding(
-                        padding: const EdgeInsets.all(32.0),
+                        padding: const EdgeInsets.all(18.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +117,7 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                                 Text(
                                     'Qty - ${provider.stockDetailList[index].qty}'),
                                 Text(
-                                    'Amount - ${provider.stockDetailList[index].amount} MMK'),
+                                    'Amount - ${thousandsSeparatorsFormat(provider.stockDetailList[index].amount!)} MMK'),
                               ],
                             ),
                           ],
@@ -125,6 +127,11 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                   },
                 );
               }),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                  '---------------------------------------------------------------'),
             ),
             Expanded(
               child: Padding(
@@ -141,9 +148,9 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                           flex: 1,
                           child: Text('Total Item(s) '),
                         ),
-                        const SizedBox(
-                          width: 150,
-                        ),
+                        // const SizedBox(
+                        //   width: 150,
+                        // ),
                         Flexible(
                           flex: 1,
                           child: Consumer<StockOrderViewProvider>(
@@ -161,12 +168,13 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                           flex: 1,
                           child: Text('Total Amount'),
                         ),
-                        const SizedBox(
-                          width: 100,
-                        ),
+                        // const SizedBox(
+                        //   width: 100,
+                        // ),
                         Flexible(
                           flex: 1,
-                          child: Text('${widget.stockHeader.amount} MMK'),
+                          child: Text(
+                              '${thousandsSeparatorsFormat(widget.stockHeader.amount!)} MMK'),
                         ),
                       ],
                     ),

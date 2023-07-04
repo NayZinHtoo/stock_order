@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../screens/stock_order_detail_screen.dart';
 
 import '../providers/stock_order_view_provider.dart';
+import '../utils/constant.dart';
 
 class StockHeaderListScreen extends StatefulWidget {
   const StockHeaderListScreen({super.key});
@@ -71,19 +72,25 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            child: Text(
+                                'System Key: ${provider.stockHeaderList[index].syskey}'),
+                          ),
+                          Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
-                                  flex: 2,
+                                  flex: 1,
                                   child: Text(
                                       'SlipNumber : ${provider.stockHeaderList[index].slipNumber}'),
                                 ),
                                 Flexible(
                                   flex: 1,
                                   child: Text(
-                                    '${provider.stockHeaderList[index].amount} MMK',
+                                    'Amount: ${thousandsSeparatorsFormat(provider.stockHeaderList[index].amount!)} MMK',
                                     textAlign: TextAlign.left,
                                   ),
                                 ),
@@ -91,10 +98,10 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                     'Date: ${provider.stockHeaderList[index].date}'),

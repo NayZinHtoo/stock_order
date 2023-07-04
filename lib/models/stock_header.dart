@@ -1,5 +1,6 @@
 class StockHeader {
   int? id;
+  String? syskey;
   int? slipNumber;
   double? amount;
   String? date;
@@ -8,6 +9,7 @@ class StockHeader {
 
   StockHeader({
     this.id,
+    this.syskey,
     this.slipNumber,
     this.amount,
     this.date,
@@ -17,6 +19,7 @@ class StockHeader {
 
   StockHeader.fromMap(Map<String, dynamic> result)
       : id = result["id"],
+        syskey = result["syskey"],
         slipNumber = result["slipNumber"],
         amount = result["amount"],
         date = result["date"],
@@ -25,6 +28,7 @@ class StockHeader {
 
   Map<String, Object> toMap() {
     return {
+      'syskey': syskey!,
       'slipNumber': slipNumber!,
       'amount': amount!,
       'date': date!,

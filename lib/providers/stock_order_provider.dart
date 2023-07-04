@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stock_pos/utils/constant.dart';
 import '../controllers/stock_order_controller.dart';
 import '../models/stock_detail.dart';
 import '../models/stock_header.dart';
@@ -82,24 +83,26 @@ class StockOrderProvider extends ChangeNotifier {
         slipNumber = value[0].slipNumber! + 1;
       }
     });
-    //var maxSlipNo = await controller.getHeaderLength();
-    //slipNumber = maxSlipNo + 1;
+    var syskey = generatesyskey();
 
     var stockHeader = StockHeader(
+      syskey: syskey,
       slipNumber: slipNumber,
       amount: totalAmount,
-      date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      date: DateFormat('dd/MM/yyyy').format(DateTime.now()),
       time: DateFormat('HH:mm:ss a').format(DateTime.now()),
       status: 0,
     );
 
-    int pid = await controller.insertStockHeader(stockHeader);
+    await controller.insertStockHeader(stockHeader);
 
     for (var item in stockItemList) {
-      item.parentId = pid;
+      item.parentId = syskey;
       controller.insertStockDetail(item);
     }
     stockDetailList = [];
+    totlalQty = 0;
+    totalAmount = 0.0;
     notifyListeners();
   }
 }

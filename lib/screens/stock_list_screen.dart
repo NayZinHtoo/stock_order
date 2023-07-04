@@ -206,14 +206,21 @@ class _StockListScreenState extends State<StockListScreen> {
                                                 maxLines: 3,
                                               ),
                                               Text(
-                                                '${provider.stockItemList[index].price} MMK',
+                                                '${thousandsSeparatorsFormat(provider.stockItemList[index].price!)} MMK',
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 3,
                                               ),
                                               ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      AppColor.greenColor,
+                                                  backgroundColor: provider
+                                                              .stockItemList[
+                                                                  index]
+                                                              .isSlelected ==
+                                                          true
+                                                      ? Theme.of(context)
+                                                          .colorScheme
+                                                          .error
+                                                      : AppColor.greenColor,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -225,13 +232,24 @@ class _StockListScreenState extends State<StockListScreen> {
                                                                 index]
                                                             .isSlelected ==
                                                         true
-                                                    ? const Text(
-                                                        'REMOVE',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Colors.white,
-                                                        ),
+                                                    ? const Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: [
+                                                          Text(
+                                                            'REMOVE',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       )
                                                     : const Row(
                                                         mainAxisSize:
@@ -266,9 +284,12 @@ class _StockListScreenState extends State<StockListScreen> {
                                                   if (provider
                                                       .stockItemList[index]
                                                       .isSlelected) {
+                                                    var syskey =
+                                                        generatesyskey();
                                                     final StockDetail
                                                         stockDetail =
                                                         StockDetail(
+                                                            syskey: syskey,
                                                             stkId: provider
                                                                 .stockItemList[
                                                                     index]

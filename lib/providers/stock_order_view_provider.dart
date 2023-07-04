@@ -17,7 +17,7 @@ class StockOrderViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getStockDetailList(int parentId) async {
+  Future<void> getStockDetailList(String parentId) async {
     stockDetailList.clear();
     stockDetailList = await controller.getStockDetailList(parentId);
     await getToalQty();

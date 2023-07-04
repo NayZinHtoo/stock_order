@@ -140,11 +140,9 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                                           .toList()[index]
                                                           .stkName ??
                                                       ''),
-                                                  subtitle: Text(provider
-                                                          .stockDetailList
-                                                          .toList()[index]
-                                                          .stkName ??
-                                                      ''),
+                                                  subtitle: Text(
+                                                    '${thousandsSeparatorsFormat(provider.stockDetailList[index].stkprice!)}MMK',
+                                                  ),
                                                 )),
                                             Flexible(
                                                 flex: 3,
@@ -184,11 +182,14 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                                   ],
                                                 )),
                                             Flexible(
-                                                flex: 2,
-                                                child: SizedBox(
-                                                    width: 150,
-                                                    child: Text(
-                                                        '${provider.stockDetailList.toList()[index].amount}MMK'))),
+                                              flex: 2,
+                                              child: SizedBox(
+                                                width: 150,
+                                                child: Text(
+                                                  '${thousandsSeparatorsFormat(provider.stockDetailList[index].amount!)}MMK',
+                                                ),
+                                              ),
+                                            ),
                                           ]),
                                     ),
                                   ),
@@ -244,7 +245,8 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                         ),
                         Flexible(
                           flex: 2,
-                          child: Text('${provider.totalAmount} MMK'),
+                          child: Text(
+                              '${thousandsSeparatorsFormat(provider.totalAmount)}MMK'),
                         ),
                       ],
                     ),
