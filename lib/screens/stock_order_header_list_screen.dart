@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_pos/screens/order_payment_screen.dart';
+import 'package:stock_pos/screens/stock_order_cart_screen.dart';
 import '../screens/stock_order_detail_screen.dart';
 
 import '../providers/stock_order_view_provider.dart';
@@ -30,7 +32,7 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Stock Header'),
+        title: const Text('Sale List'),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -47,7 +49,7 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
                 padding: const EdgeInsets.all(16),
                 child: const Center(
                   child: Text(
-                    'No Order Data',
+                    'No Sale Data',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
@@ -164,6 +166,60 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
                                 ],
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: provider.stockHeaderList[index]
+                                                .status ==
+                                            1
+                                        ? () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    StockOrderCartScreen(
+                                                  title: 'Sale Stock',
+                                                  syskey:
+                                                      '${provider.stockHeaderList[index].syskey}',
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        : null,
+                                    child: const Text('Add other items'),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: provider.stockHeaderList[index]
+                                                .status ==
+                                            1
+                                        ? () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderPaymentSreen(
+                                                        pid:
+                                                            '${provider.stockHeaderList[index].syskey}',
+                                                        totalAmount: provider
+                                                            .stockHeaderList[
+                                                                index]
+                                                            .amount!,
+                                                      )),
+                                            );
+                                          }
+                                        : null,
+                                    child: const Text('Bill Payment'),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -172,6 +228,25 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
                 },
               );
       }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const StockOrderCartScreen(
+                title: 'Sale Stock',
+                syskey: '',
+              ),
+            ),
+          );
+        },
+        backgroundColor: AppColor.greenColor,
+        tooltip: 'Order Stock',
+        child: const Icon(
+          Icons.shopping_cart,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }

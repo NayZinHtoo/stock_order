@@ -3,12 +3,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_pos/providers/stock_item_provider.dart';
 import 'package:stock_pos/providers/stock_order_provider.dart';
+import 'package:stock_pos/screens/custom_search_delegate.dart';
+import 'package:stock_pos/screens/order_payment_screen.dart';
 import '../utils/constant.dart';
 
 class StockOrderCartScreen extends StatefulWidget {
-  const StockOrderCartScreen({super.key, required this.title});
+  const StockOrderCartScreen(
+      {super.key, required this.title, required this.syskey});
 
   final String title;
+  final String syskey;
 
   @override
   State<StockOrderCartScreen> createState() => _StockOrderCartScreenState();
@@ -18,11 +22,17 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
   late StockOrderProvider stockOrderProvider;
   late StockProvider stockProvider;
 
+  late double _totalAmount = 0.0;
+
   @override
   void initState() {
     stockOrderProvider =
         Provider.of<StockOrderProvider>(context, listen: false);
     stockProvider = Provider.of<StockProvider>(context, listen: false);
+    stockProvider.getStockItem();
+    if (widget.syskey.isNotEmpty) {
+      stockOrderProvider.getStockOrderDetilList(widget.syskey);
+    }
     super.initState();
   }
 
@@ -42,10 +52,46 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            if (stockOrderProvider.stockDetailList.isNotEmpty) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Warning"),
+                    content: const Text(
+                        "Are you sure you wish to discard your order item(s)?"),
+                    actions: <Widget>[
+                      ElevatedButton(
+                          onPressed: () {
+                            stockOrderProvider.clearData();
+                            Navigator.of(context).pop(true);
+                          },
+                          child: const Text("Disard")),
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text("Cancel"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              Navigator.pop(context);
+            }
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.close),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(
+                      stockItemList: stockProvider.stockItemList));
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ],
         title: Column(
           children: [
             Text(widget.title),
@@ -73,7 +119,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'ORDER ITEMS',
+                      'SALE ITEMS',
                       textAlign: TextAlign.left,
                       style: TextStyle(color: Colors.grey),
                     ),
@@ -201,7 +247,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                           return const Expanded(
                               child: Center(
                                   child: Text(
-                            'No Order Items',
+                            'No Sale Items',
                             style: TextStyle(
                               fontSize: 30,
                             ),
@@ -260,13 +306,22 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                       ),
                     ),
                     onPressed: provider.stockDetailList.isNotEmpty
-                        ? () {
-                            provider.orderStockItem(
+                        ? () async {
+                            _totalAmount = provider.totalAmount;
+                            var syskey = await provider.orderStockItem(
                                 stockOrderProvider.stockDetailList);
                             //stockProvider.getStockItem();
                             stockProvider.resetStockItemSelected();
                             showToast();
-                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderPaymentSreen(
+                                        pid: syskey,
+                                        totalAmount: _totalAmount,
+                                      )),
+                            );
+                            //Navigator.pop(context);
                           }
                         : null,
                     child: const Row(

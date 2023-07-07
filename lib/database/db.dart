@@ -35,12 +35,12 @@ class StockDB with ChangeNotifier {
 
   Future _createTable(Database db, int version) async {
     await db.execute('CREATE TABLE IF NOT EXISTS stock_item('
-        'id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'
-        'name TEXT NOT NULL,'
-        'description TEXT NOT NULL,'
-        'price DOUBLE,'
-        'category TEXT NOT NULL,'
-        'image TEXT NOT NULL,'
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'name TEXT,'
+        'description TEXT,'
+        'price DOUBLE DEFAULT 0,'
+        'category TEXT,'
+        'image TEXT,'
         'status INTEGER DEFAULT 0'
         ')');
     await db.execute('CREATE TABLE IF NOT EXISTS pos001('
@@ -50,7 +50,7 @@ class StockDB with ChangeNotifier {
         'amount DOUBLE,'
         'date TEXT,'
         'time TEXT,'
-        'status INTEGER DEFAULT 0'
+        'status INTEGER DEFAULT 1'
         ')');
     await db.execute('CREATE TABLE IF NOT EXISTS pos002('
         'id INTEGER PRIMARY KEY AUTOINCREMENT,'
@@ -63,14 +63,32 @@ class StockDB with ChangeNotifier {
         'amount DOUBLE,'
         'status INTEGER DEFAULT 0'
         ')');
+    await db.execute('CREATE TABLE IF NOT EXISTS pos_payment('
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'syskey TEXT,'
+        'desc TEXT,'
+        'dftPayment INT DEFAULT 0,'
+        'status INTEGER DEFAULT 0'
+        ')');
+    await db.execute('CREATE TABLE IF NOT EXISTS pos007('
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'syskey TEXT,'
+        'parentId TEXT,'
+        'paymentId TEXT,'
+        'paymentdesc TEXT,'
+        'amount DOUBLE,'
+        'status INTEGER DEFAULT 0'
+        ')');
+    await db.rawInsert(
+        'INSERT INTO pos_payment(syskey, desc, dftPayment,status) VALUES("2023760954881111","Cash", 1,0)');
 
-    await db.rawInsert(
-        'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Lemon","Lemons include many vitamins and nutrients that can provide a boost to your body: Vitamin C: Lemons are a good source of Vitamin C, which promotes immunity, battles infection, heals wounds, and more.", 1500.0, "Drink","assets/lemon.jpeg",0)');
-    await db.rawInsert(
-        'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Rice","Rice is a rich source of carbohydrates, the body\'s main fuel source. Carbohydrates can keep you energized and satisfied, and are important for fueling exercise. Brown rice, especially, is an excellent source of many nutrients, including fiber, manganese, selenium, magnesium, and B vitamins.", 2500.0, "Food","assets/rice.jpg",0)');
-    await db.rawInsert(
-        'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Strawberry","Strawberry Juice is rich in antioxidants, such as flavonoids and polyphenols, which can help to reduce inflammation and promote healthy blood flow.", 2000.0, "Drink","assets/strawberry.jpg",0)');
-    await db.rawInsert(
-        'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Noodle","A vast majority of instant noodles are low in calories, but are also low in fibre and protein. They are also notorious for being high in fat, carbohydrates, and sodium. While you will be able to get some micronutrients from instant noodles, they lack important nutrients like vitamin A, vitamin C, vitamin B12, and more.", 3000.0, "Food","assets/noodle.jpeg",0)');
+    // await db.rawInsert(
+    //     'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Lemon","Lemons include many vitamins and nutrients that can provide a boost to your body: Vitamin C: Lemons are a good source of Vitamin C, which promotes immunity, battles infection, heals wounds, and more.", 1500.0, "Drink","assets/lemon.jpeg",0)');
+    // await db.rawInsert(
+    //     'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Rice","Rice is a rich source of carbohydrates, the body\'s main fuel source. Carbohydrates can keep you energized and satisfied, and are important for fueling exercise. Brown rice, especially, is an excellent source of many nutrients, including fiber, manganese, selenium, magnesium, and B vitamins.", 2500.0, "Food","assets/rice.jpg",0)');
+    // await db.rawInsert(
+    //     'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Strawberry","Strawberry Juice is rich in antioxidants, such as flavonoids and polyphenols, which can help to reduce inflammation and promote healthy blood flow.", 2000.0, "Drink","assets/strawberry.jpg",0)');
+    // await db.rawInsert(
+    //     'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Noodle","A vast majority of instant noodles are low in calories, but are also low in fibre and protein. They are also notorious for being high in fat, carbohydrates, and sodium. While you will be able to get some micronutrients from instant noodles, they lack important nutrients like vitamin A, vitamin C, vitamin B12, and more.", 3000.0, "Food","assets/noodle.jpeg",0)');
   }
 }

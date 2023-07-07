@@ -34,4 +34,26 @@ class StockItemListController {
     );
     return queryResult.map((e) => StockItem.fromMap(e)).toList();
   }
+
+  //update data
+  Future<void> updateStockItem(StockItem stockItem) async {
+    db = await StockDB.db.database;
+    await db.update(
+      'stock_item',
+      stockItem.toMap(),
+      where: 'id = ?',
+      whereArgs: [stockItem.id],
+    );
+  }
+
+  // update delete status
+  Future<void> updateStockItemStatus(int id) async {
+    db = await StockDB.db.database;
+    await db.update(
+      'stock_item',
+      {'status': 1},
+      where: "id = ?",
+      whereArgs: [id],
+    );
+  }
 }

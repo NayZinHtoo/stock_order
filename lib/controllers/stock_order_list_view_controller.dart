@@ -12,8 +12,8 @@ class StockOrderListViewController {
     db = await StockDB.db.database;
     final List<Map<String, Object?>> queryResult = await db.query(
       'pos001',
-      where: 'status = ?',
-      whereArgs: [1],
+      //where: 'status = ?',
+      //whereArgs: [1],
     );
     return queryResult.map((e) => StockHeader.fromMap(e)).toList();
   }
@@ -29,11 +29,11 @@ class StockOrderListViewController {
     return queryResult.map((e) => StockDetail.fromMap(e)).toList();
   }
 
-  Future<void> updateStockHeaderStatus(int id) async {
+  Future<void> updateStockHeaderStatus(int id, int status) async {
     db = await StockDB.db.database;
     await db.update(
       'pos001',
-      {'status': 128},
+      {'status': status},
       where: "id = ?",
       whereArgs: [id],
     );

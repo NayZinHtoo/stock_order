@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_pos/screens/stock_item_add_screen.dart';
 
-import '../models/stock_detail.dart';
 import '../models/stock_item.dart';
 import '../providers/stock_item_provider.dart';
 import '../providers/stock_order_provider.dart';
@@ -31,6 +34,20 @@ class _StockIemDetailScreenState extends State<StockIemDetailScreen> {
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddStockItemScreen(
+                          stockItem: stockItem,
+                        )),
+              );
+            },
+            icon: const Icon(Icons.mode_edit_outlined),
+          ),
+        ],
         title: Text('${widget.stockItem?.name}'),
       ),
       body: Center(
@@ -38,7 +55,11 @@ class _StockIemDetailScreenState extends State<StockIemDetailScreen> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Consumer<StockProvider>(builder: (context, provider, _) {
-              stockItem = widget.stockItem;
+              final tempStockItem = provider.stockItemList
+                  .where((item) => item.id == widget.stockItem!.id)
+                  .toList()[0];
+              //stockItem = widget.stockItem;
+              stockItem = tempStockItem;
               return Container(
                 alignment: Alignment.center,
                 padding:
@@ -51,12 +72,19 @@ class _StockIemDetailScreenState extends State<StockIemDetailScreen> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: Image.asset(
-                        '${stockItem!.image}',
+                      child: Image.memory(
+                        Uint8List.fromList(
+                            base64.decode('${stockItem!.image}')),
                         height: 250,
                         width: double.maxFinite,
                         fit: BoxFit.cover,
                       ),
+                      // Image.asset(
+                      //   '${stockItem!.image}',
+                      //   height: 250,
+                      //   width: double.maxFinite,
+                      //   fit: BoxFit.cover,
+                      // ),
                     ),
                     const SizedBox(
                       height: 24,
@@ -72,9 +100,20 @@ class _StockIemDetailScreenState extends State<StockIemDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${stockItem!.name}',
-                            style: Theme.of(context).textTheme.headlineMedium,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${stockItem!.name}',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                              Text(
+                                '${thousandsSeparatorsFormat(stockItem!.price!)} MMK',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 24,
@@ -89,68 +128,68 @@ class _StockIemDetailScreenState extends State<StockIemDetailScreen> {
                     const SizedBox(
                       height: 16,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: stockItem?.isSlelected == true
-                            ? Theme.of(context).colorScheme.error
-                            : AppColor.greenColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      child: stockItem?.isSlelected == true
-                          ? const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  'REMOVE',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : const Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'ADD',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Icon(
-                                  Icons.shopping_cart_sharp,
-                                  size: 17,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                      onPressed: () {
-                        provider.setStockItemSelected(
-                          stockItem!.id!,
-                        );
-                        if (stockItem!.isSlelected) {
-                          var syskey = generatesyskey();
-                          final StockDetail stockDetail = StockDetail(
-                              syskey: syskey,
-                              stkId: stockItem!.id,
-                              stkName: stockItem!.name,
-                              qty: 1,
-                              stkprice: stockItem!.price,
-                              amount: stockItem!.price,
-                              status: 0);
-                          stockOrderProvider.addStockOrderItem(stockDetail);
-                        } else {
-                          stockOrderProvider
-                              .removeStockOrderItem(stockItem!.id!);
-                        }
-                      },
-                    ),
+                    // ElevatedButton(
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: stockItem?.isSlelected == true
+                    //         ? Theme.of(context).colorScheme.error
+                    //         : AppColor.greenColor,
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(10.0),
+                    //     ),
+                    //   ),
+                    //   child: stockItem?.isSlelected == true
+                    //       ? const Row(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           mainAxisSize: MainAxisSize.max,
+                    //           children: [
+                    //             Text(
+                    //               'REMOVE',
+                    //               style: TextStyle(
+                    //                 fontWeight: FontWeight.w700,
+                    //                 color: Colors.white,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         )
+                    //       : const Row(
+                    //           mainAxisSize: MainAxisSize.max,
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           children: [
+                    //             Text(
+                    //               'ADD',
+                    //               style: TextStyle(color: Colors.white),
+                    //             ),
+                    //             SizedBox(
+                    //               width: 5.0,
+                    //             ),
+                    //             Icon(
+                    //               Icons.shopping_cart_sharp,
+                    //               size: 17,
+                    //               color: Colors.white,
+                    //             ),
+                    //           ],
+                    //         ),
+                    //   onPressed: () {
+                    //     provider.setStockItemSelected(
+                    //       stockItem!.id!,
+                    //     );
+                    //     if (stockItem!.isSlelected) {
+                    //       var syskey = generatesyskey();
+                    //       final StockDetail stockDetail = StockDetail(
+                    //           syskey: syskey,
+                    //           stkId: stockItem!.id,
+                    //           stkName: stockItem!.name,
+                    //           qty: 1,
+                    //           stkprice: stockItem!.price,
+                    //           amount: stockItem!.price,
+                    //           status: 0);
+                    //       stockOrderProvider.addStockOrderItem(stockDetail);
+                    //     } else {
+                    //       stockOrderProvider
+                    //           .removeStockOrderItem(stockItem!.id!);
+                    //     }
+                    //   },
+                    // ),
                   ],
                 ),
               );

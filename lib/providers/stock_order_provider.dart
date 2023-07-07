@@ -14,6 +14,23 @@ class StockOrderProvider extends ChangeNotifier {
   double totalAmount = 0.0;
   int slipNumber = 1;
 
+  clearData() {
+    stockDetailList.clear();
+    totlalQty = 0;
+    totalAmount = 0.0;
+    notifyListeners();
+  }
+
+  getStockOrderDetilList(String syskey) async {
+    stockDetailList.clear();
+    totlalQty = 0;
+    totalAmount = 0.0;
+    stockDetailList = await controller.getStockOrderDetilList(syskey);
+    getTotalAmount();
+    getTotalQty();
+    notifyListeners();
+  }
+
   getTotalAmount() {
     var total = 0.0;
     for (var stockItem in stockDetailList) {
@@ -75,7 +92,7 @@ class StockOrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  orderStockItem(List<StockDetail> stockItemList) async {
+  Future<String> orderStockItem(List<StockDetail> stockItemList) async {
     await controller.readMaxSlipNoforHeader().then((value) {
       if (value.isEmpty) {
         slipNumber = 1;
@@ -104,5 +121,6 @@ class StockOrderProvider extends ChangeNotifier {
     totlalQty = 0;
     totalAmount = 0.0;
     notifyListeners();
+    return syskey;
   }
 }

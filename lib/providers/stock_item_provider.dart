@@ -14,6 +14,31 @@ class StockProvider extends ChangeNotifier {
     return count;
   }
 
+  addStockItem(StockItem stockItem) async {
+    stockItemList.add(stockItem);
+    allStockItemList.add(stockItem);
+    notifyListeners();
+    return stockItemList;
+  }
+
+  removeStockItem(StockItem stockItem) {
+    //controller.deleteStockItem(stockItem.id!);
+    controller.updateStockItemStatus(stockItem.id!);
+    stockItemList.remove(stockItem);
+    allStockItemList.remove(stockItem);
+    notifyListeners();
+  }
+
+  updateStockItem(StockItem stockItem) async {
+    controller.updateStockItem(stockItem);
+    stockItemList[stockItemList
+        .indexWhere((element) => element.id == stockItem.id)] = stockItem;
+    allStockItemList[allStockItemList
+        .indexWhere((element) => element.id == stockItem.id)] = stockItem;
+    notifyListeners();
+    return stockItemList;
+  }
+
   getStockItem() async {
     stockItemList.clear();
     allStockItemList.clear();

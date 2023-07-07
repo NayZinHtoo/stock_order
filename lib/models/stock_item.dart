@@ -31,7 +31,6 @@ class StockItem {
 
   Map<String, Object> toMap() {
     return {
-      'id': id!,
       'name': name!,
       'description': description!,
       'price': price!,

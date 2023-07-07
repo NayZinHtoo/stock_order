@@ -34,4 +34,14 @@ class StockOrderController {
         await db.rawQuery('SELECT * FROM pos001');
     return queryResult.map((e) => StockHeader.fromMap(e)).toList().length;
   }
+
+  Future<List<StockDetail>> getStockOrderDetilList(String syskey) async {
+    db = await StockDB.db.database;
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'pos002',
+      where: 'parentId = ? ',
+      whereArgs: [syskey],
+    );
+    return queryResult.map((e) => StockDetail.fromMap(e)).toList();
+  }
 }

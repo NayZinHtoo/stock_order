@@ -34,7 +34,7 @@ class StockOrderViewProvider extends ChangeNotifier {
   }
 
   Future<void> removeStockHeader(StockHeader stockHeader) async {
-    await controller.updateStockHeaderStatus(stockHeader.id!);
+    await controller.updateStockHeaderStatus(stockHeader.id!,0);
     stockHeaderList.remove(stockHeader);
     notifyListeners();
   }
