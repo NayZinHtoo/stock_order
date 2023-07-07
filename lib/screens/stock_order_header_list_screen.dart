@@ -39,6 +39,14 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              stockOrderViewProvider.getStockHeaderList();
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
       ),
       body: Consumer<StockOrderViewProvider>(builder: (context, provider, _) {
         return provider.stockHeaderList.isEmpty
@@ -207,6 +215,10 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
                                                       OrderPaymentSreen(
                                                         pid:
                                                             '${provider.stockHeaderList[index].syskey}',
+                                                        slipNo: provider
+                                                            .stockHeaderList[
+                                                                index]
+                                                            .slipNumber!,
                                                         totalAmount: provider
                                                             .stockHeaderList[
                                                                 index]

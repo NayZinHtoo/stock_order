@@ -50,7 +50,14 @@ class StockOrderProvider extends ChangeNotifier {
   }
 
   addStockOrderItem(StockDetail stockItem) {
-    stockDetailList.add(stockItem);
+    final index = stockDetailList
+        .indexWhere((element) => element.stkId == stockItem.stkId);
+
+    if (index >= 0) {
+      qtyCalculate(index: index, isIncreased: true);
+    } else {
+      stockDetailList.add(stockItem);
+    }
     getTotalAmount();
     getTotalQty();
     notifyListeners();
@@ -92,7 +99,23 @@ class StockOrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> orderStockItem(List<StockDetail> stockItemList) async {
+  updateSaleStockItem(List<StockDetail> stockItemList, String parendId) async {
+    await controller.updateStockHeader(parendId, totalAmount);
+
+    await controller.deleteStockDetail(parendId);
+
+    for (var item in stockItemList) {
+      item.parentId = parendId;
+      controller.insertStockDetail(item);
+    }
+
+    stockDetailList = [];
+    totlalQty = 0;
+    totalAmount = 0.0;
+    notifyListeners();
+  }
+
+  Future<StockHeader> orderStockItem(List<StockDetail> stockItemList) async {
     await controller.readMaxSlipNoforHeader().then((value) {
       if (value.isEmpty) {
         slipNumber = 1;
@@ -121,6 +144,6 @@ class StockOrderProvider extends ChangeNotifier {
     totlalQty = 0;
     totalAmount = 0.0;
     notifyListeners();
-    return syskey;
+    return stockHeader;
   }
 }

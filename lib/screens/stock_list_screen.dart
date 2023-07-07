@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_pos/providers/stock_order_provider.dart';
 import 'package:stock_pos/screens/pos_payment_list_screen.dart';
+import 'package:stock_pos/screens/pos_payment_setup_screen.dart';
 import 'package:stock_pos/screens/stock_item_add_screen.dart';
 import 'package:stock_pos/screens/stock_item_detail_screen.dart';
 import 'package:stock_pos/screens/stock_order_cart_screen.dart';
@@ -70,50 +71,88 @@ class _StockListScreenState extends State<StockListScreen> {
               ),
               child: Text('Sale Stock POS'),
             ),
-            ListTile(
-              title: const Text('Stock List'),
-              onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => const POSPaymentListScreen()),
-                // );
-                Navigator.of(context).pop();
-              },
+            ExpansionTile(
+              title: const Text('Stock'),
+              childrenPadding: const EdgeInsets.all(16),
+              children: [
+                ListTile(
+                  title: const Text('Stock List'),
+                  onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const POSPaymentListScreen()),
+                    // );
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  title: const Text('New Stock Item'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddStockItemScreen()),
+                    );
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              title: const Text('Pos Payment List'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const POSPaymentListScreen()),
-                );
-              },
+            ExpansionTile(
+              title: const Text('Pos Payment'),
+              childrenPadding: const EdgeInsets.all(16),
+              children: [
+                ListTile(
+                  title: const Text('Payment Type List'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const POSPaymentListScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('New Payment Type'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const POSPaymentSetupScreen()),
+                    );
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              title: const Text('Sale List'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const StockHeaderListScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('New Sale'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const StockOrderCartScreen(
-                      title: 'Sale Stock',
-                      syskey: '',
-                    ),
-                  ),
-                );
-              },
+            ExpansionTile(
+              title: const Text('Sale Stock'),
+              childrenPadding: const EdgeInsets.all(16),
+              children: [
+                ListTile(
+                  title: const Text('Sale List'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const StockHeaderListScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('New Sale'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const StockOrderCartScreen(
+                          title: 'Sale Stock',
+                          syskey: '',
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),

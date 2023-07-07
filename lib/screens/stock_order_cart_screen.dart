@@ -5,14 +5,16 @@ import 'package:stock_pos/providers/stock_item_provider.dart';
 import 'package:stock_pos/providers/stock_order_provider.dart';
 import 'package:stock_pos/screens/custom_search_delegate.dart';
 import 'package:stock_pos/screens/order_payment_screen.dart';
+import '../models/stock_header.dart';
 import '../utils/constant.dart';
 
 class StockOrderCartScreen extends StatefulWidget {
   const StockOrderCartScreen(
-      {super.key, required this.title, required this.syskey});
+      {super.key, required this.title, required this.syskey, this.slipNo = 0});
 
   final String title;
   final String syskey;
+  final int? slipNo;
 
   @override
   State<StockOrderCartScreen> createState() => _StockOrderCartScreenState();
@@ -21,8 +23,14 @@ class StockOrderCartScreen extends StatefulWidget {
 class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
   late StockOrderProvider stockOrderProvider;
   late StockProvider stockProvider;
+  late StockHeader stockHeader;
 
   late double _totalAmount = 0.0;
+  late String _parentId = '';
+  late int _slipNo = 0;
+
+  //late List<StockDetail> previousStockDetailList;
+  //late List<StockDetail> removedStockDetailList;
 
   @override
   void initState() {
@@ -32,6 +40,9 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
     stockProvider.getStockItem();
     if (widget.syskey.isNotEmpty) {
       stockOrderProvider.getStockOrderDetilList(widget.syskey);
+      _parentId = widget.syskey;
+      _slipNo = widget.slipNo!;
+      //previousStockDetailList = stockOrderProvider.stockDetailList;
     }
     super.initState();
   }
@@ -65,6 +76,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                           onPressed: () {
                             stockOrderProvider.clearData();
                             Navigator.of(context).pop(true);
+                            Navigator.pop(context);
                           },
                           child: const Text("Disard")),
                       ElevatedButton(
@@ -139,6 +151,16 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                       stockProvider.setStockItemSelected(
                                           stockOrderProvider
                                               .stockDetailList[index].stkId!);
+                                      // for (var stockDetail
+                                      //     in previousStockDetailList) {
+                                      //   if (stockOrderProvider
+                                      //           .stockDetailList[index]
+                                      //           .stkId! ==
+                                      //       stockDetail.id) {
+                                      //     removedStockDetailList
+                                      //         .add(stockDetail);
+                                      //   }
+                                      // }
                                       stockOrderProvider.removeStockOrderItem(
                                           stockOrderProvider
                                               .stockDetailList[index].stkId!);
@@ -308,16 +330,25 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                     onPressed: provider.stockDetailList.isNotEmpty
                         ? () async {
                             _totalAmount = provider.totalAmount;
-                            var syskey = await provider.orderStockItem(
-                                stockOrderProvider.stockDetailList);
-                            //stockProvider.getStockItem();
+                            if (_parentId.isEmpty) {
+                              stockHeader = await provider.orderStockItem(
+                                  stockOrderProvider.stockDetailList);
+                              _parentId = stockHeader.syskey!;
+                              _slipNo = stockHeader.slipNumber!;
+                              //stockProvider.getStockItem();
+                            } else {
+                              await provider.updateSaleStockItem(
+                                  stockOrderProvider.stockDetailList,
+                                  _parentId);
+                            }
                             stockProvider.resetStockItemSelected();
                             showToast();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OrderPaymentSreen(
-                                        pid: syskey,
+                                        pid: _parentId,
+                                        slipNo: _slipNo,
                                         totalAmount: _totalAmount,
                                       )),
                             );

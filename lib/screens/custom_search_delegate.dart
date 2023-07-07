@@ -69,7 +69,7 @@ class CustomSearchDelegate extends SearchDelegate {
         matchQuery.add(stockItem);
       }
     }
-    return ListView.builder(
+    return ListView.separated(
       itemCount: matchQuery.length,
       itemBuilder: (context, index) {
         var result = matchQuery[index];
@@ -87,31 +87,38 @@ class CustomSearchDelegate extends SearchDelegate {
             stockOrderProvider.addStockOrderItem(stockDetail);
             Navigator.of(context).pop();
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                '${result.id}',
-                style: const TextStyle(
-                  fontSize: 16,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  '${result.id}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-              Text(
-                result.name!,
-                style: const TextStyle(
-                  fontSize: 16,
+                Text(
+                  result.name!,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-              Text(
-                '${thousandsSeparatorsFormat(result.price!)} MMK',
-                style: const TextStyle(
-                  fontSize: 16,
+                Text(
+                  '${thousandsSeparatorsFormat(result.price!)} MMK',
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
+      separatorBuilder: (context, index) => const Divider(
+        color: Colors.green,
+        thickness: 1,
+      ),
     );
   }
 }

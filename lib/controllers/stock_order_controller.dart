@@ -21,8 +21,6 @@ class StockOrderController {
 
   Future<List<StockHeader>> readMaxSlipNoforHeader() async {
     db = await StockDB.db.database;
-    // final List<Map<String, Object?>> queryResult1 = await db
-    //     .rawQuery('SELECT MAX(slipNumber) AS slipNumber FROM pos001');
     final List<Map<String, Object?>> queryResult = await db
         .rawQuery('SELECT * FROM pos001 ORDER BY slipNumber desc limit 1');
     return queryResult.map((e) => StockHeader.fromMap(e)).toList();
@@ -39,9 +37,29 @@ class StockOrderController {
     db = await StockDB.db.database;
     final List<Map<String, Object?>> queryResult = await db.query(
       'pos002',
-      where: 'parentId = ? ',
-      whereArgs: [syskey],
+      where: 'parentId = ? and status = ? ',
+      whereArgs: [syskey, 0],
     );
     return queryResult.map((e) => StockDetail.fromMap(e)).toList();
+  }
+
+  Future<void> updateStockHeader(String syskey, double totalAmount) async {
+    db = await StockDB.db.database;
+    await db.update(
+      'pos001',
+      {'amount': totalAmount},
+      where: 'syskey = ?',
+      whereArgs: [syskey],
+    );
+  }
+
+  Future<void> deleteStockDetail(String parentId) async {
+    db = await StockDB.db.database;
+    await db.update(
+      'pos002',
+      {'status': 1},
+      where: 'parentId = ?',
+      whereArgs: [parentId],
+    );
   }
 }

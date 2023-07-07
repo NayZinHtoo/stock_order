@@ -92,24 +92,63 @@ class _POSPaymentSetupScreenState extends State<POSPaymentSetupScreen> {
         key: _formKey,
         child: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(14),
+            alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
                 const Text('Payment Code'),
-                TextFormField(
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    hintText:
-                        '${widget.posPayment == null ? posPaymentProvider.paymentList.length + 1 : id}',
-                  ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: TextFormField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          hintText:
+                              '${widget.posPayment == null ? posPaymentProvider.paymentList.length + 1 : id}',
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                              value: value,
+                              onChanged: (value) {
+                                setState(() {
+                                  this.value = value!;
+                                });
+                              }),
+                          const Text('Default'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
                 ),
                 const Text('Payment Description'),
+                const SizedBox(
+                  height: 5,
+                ),
                 TextFormField(
                   controller: _paymentDescController,
                   decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                     hintText: 'Enter payment description',
                   ),
                   validator: (value) {
@@ -119,21 +158,13 @@ class _POSPaymentSetupScreenState extends State<POSPaymentSetupScreen> {
                     return null;
                   },
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Default'),
-                    Checkbox(
-                        value: value,
-                        onChanged: (value) {
-                          setState(() {
-                            this.value = value!;
-                          });
-                        })
-                  ],
+                const SizedBox(
+                  height: 15,
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                    padding: const EdgeInsets.all(8),
                     backgroundColor: AppColor.greenColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),

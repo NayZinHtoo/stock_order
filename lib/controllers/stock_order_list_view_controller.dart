@@ -18,13 +18,24 @@ class StockOrderListViewController {
     return queryResult.map((e) => StockHeader.fromMap(e)).toList();
   }
 
+  // retrieve one header data
+  Future<StockHeader> getStockHeader(String syskey) async {
+    db = await StockDB.db.database;
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'pos001',
+      where: 'syskey = ?',
+      whereArgs: [syskey],
+    );
+    return queryResult.map((e) => StockHeader.fromMap(e)).toList().first;
+  }
+
   // retrieve stock detail data
   Future<List<StockDetail>> getStockDetailList(String pid) async {
     db = await StockDB.db.database;
     final List<Map<String, Object?>> queryResult = await db.query(
       'pos002',
-      where: 'parentId = ? ',
-      whereArgs: [pid],
+      where: 'parentId = ? and status = ?',
+      whereArgs: [pid, 0],
     );
     return queryResult.map((e) => StockDetail.fromMap(e)).toList();
   }

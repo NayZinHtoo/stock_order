@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class AppColor {
@@ -20,4 +21,13 @@ String generatesyskey() {
 String thousandsSeparatorsFormat(double number) {
   NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
   return myFormat.format(number);
+}
+
+void showToast(String msg) {
+  Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.black,
+      textColor: Colors.white);
 }

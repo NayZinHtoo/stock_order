@@ -11,9 +11,13 @@ import '../providers/stock_order_view_provider.dart';
 
 class OrderPaymentSreen extends StatefulWidget {
   final String pid;
+  final int slipNo;
   final double totalAmount;
   const OrderPaymentSreen(
-      {super.key, required this.pid, required this.totalAmount});
+      {super.key,
+      required this.pid,
+      required this.totalAmount,
+      required this.slipNo});
 
   @override
   State<OrderPaymentSreen> createState() => _OrderPaymentSreenState();
@@ -37,6 +41,7 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
     stockOrderViewProvider =
         Provider.of<StockOrderViewProvider>(context, listen: false);
     stockOrderViewProvider.getStockDetailList(widget.pid);
+
     provider.getAllPaymentList();
 
     _controller.text = '${widget.totalAmount}';
@@ -57,13 +62,13 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
     return Column(
       children: [
         ListTile(
-          title: Icon(Icons.add),
+          title: const Icon(Icons.add),
           onTap: () {
             final controller = TextEditingController();
             final field = TextField(
               controller: controller,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   onPressed: () {
                     _addTile();
@@ -89,7 +94,7 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
       itemCount: _fields.length,
       itemBuilder: (context, index) {
         return Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           child: _fields[index],
         );
       },
@@ -101,7 +106,7 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Order Payment'),
+        title: const Text('Sale Payment'),
         leading: IconButton(
           onPressed: () {
             Navigator.push(
@@ -123,69 +128,184 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            const Text('ORDER ITEM(S)'),
+            Text(
+              'SlipNo#: ${widget.slipNo}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              'SALE ITEM(S)',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             Expanded(
               child: Consumer<StockOrderViewProvider>(
                   builder: (context, provider, _) {
                 return ListView.builder(
                     itemCount: provider.stockDetailList.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                              flex: 1,
-                              child: Text(
-                                  '${provider.stockDetailList[index].stkName}')),
-                          Flexible(
-                              flex: 1,
-                              child: Text(
-                                  '${provider.stockDetailList[index].qty}')),
-                          Flexible(
-                              flex: 1,
-                              child: Text(
-                                  '${provider.stockDetailList[index].amount} MMK')),
-                        ],
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                                flex: 3,
+                                child: Text(
+                                    '${provider.stockDetailList[index].stkName}')),
+                            Expanded(
+                                flex: 1,
+                                child: Text(
+                                    '${provider.stockDetailList[index].qty}')),
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                    '${thousandsSeparatorsFormat(provider.stockDetailList[index].amount!)} MMK')),
+                          ],
+                        ),
                       );
                     });
               }),
             ),
-            Consumer<PosPaymentProvider>(builder: (context, provider, _) {
-              provider.paymentList.isNotEmpty
-                  ? posPayment = provider.paymentList[0]
-                  : posPayment = null;
-              return DropdownButtonFormField(
-                value: posPayment,
-                decoration: const InputDecoration(),
-                icon: const Icon(
-                  Icons.arrow_drop_down_sharp,
-                  size: 30,
-                  textDirection: TextDirection.rtl,
-                ),
-                items: provider.paymentList.map((PosPayment items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    child: Text('${items.desc}'),
-                  );
-                }).toList(),
-                onChanged: (PosPayment? newValue) {
-                  setState(() {
-                    posPayment = newValue!;
-                  });
-                },
+            Consumer<StockOrderViewProvider>(builder: (context, provider, _) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Total Qty',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '${provider.totalQty}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Item Count',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '${provider.stockDetailList.length}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Total Amount',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '${thousandsSeparatorsFormat(widget.totalAmount)} MMK',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               );
             }),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
-            TextFormField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                hintText: 'Enter your amount',
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Consumer<PosPaymentProvider>(
+                      builder: (context, provider, _) {
+                    provider.paymentList.isNotEmpty
+                        ? posPayment = provider.paymentList[0]
+                        : posPayment = null;
+                    return DropdownButtonFormField(
+                      value: posPayment,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      ),
+                      icon: const Icon(
+                        Icons.arrow_drop_down_sharp,
+                        size: 30,
+                        textDirection: TextDirection.rtl,
+                      ),
+                      items: provider.paymentList.map((PosPayment items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text('${items.desc}'),
+                        );
+                      }).toList(),
+                      onChanged: (PosPayment? newValue) {
+                        setState(() {
+                          posPayment = newValue!;
+                        });
+                      },
+                    );
+                  }),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: TextFormField(
+                    controller: _controller,
+                    textAlign: TextAlign.right,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      hintText: 'Enter your amount',
+                    ),
+                  ),
+                ),
+              ],
             ),
+
             const SizedBox(
               height: 10,
             ),
@@ -196,8 +316,13 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
             //Expanded(child: _listView()),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                  backgroundColor: AppColor.greenColor),
+                minimumSize: const Size.fromHeight(50),
+                padding: const EdgeInsets.all(8),
+                backgroundColor: AppColor.greenColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => false);
                 Navigator.push(
@@ -219,8 +344,13 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                  backgroundColor: AppColor.greenColor),
+                minimumSize: const Size.fromHeight(50),
+                padding: const EdgeInsets.all(8),
+                backgroundColor: AppColor.greenColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
               onPressed: () {
                 var syskey = generatesyskey();
                 var orderPayment = StockOrderPayment(
@@ -233,6 +363,7 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
                 );
                 orderPaymentList.add(orderPayment);
                 stockOrderPaymentProvider.addOrderPayment(orderPaymentList);
+                showToast('Pay Bill Successful');
                 Navigator.of(context).pop();
               },
               child: const Text(

@@ -17,6 +17,10 @@ class StockOrderViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<StockHeader> getStockHeader(String syskey) async {
+    return await controller.getStockHeader(syskey);
+  }
+
   Future<void> getStockDetailList(String parentId) async {
     stockDetailList.clear();
     stockDetailList = await controller.getStockDetailList(parentId);
@@ -34,7 +38,7 @@ class StockOrderViewProvider extends ChangeNotifier {
   }
 
   Future<void> removeStockHeader(StockHeader stockHeader) async {
-    await controller.updateStockHeaderStatus(stockHeader.id!,0);
+    await controller.updateStockHeaderStatus(stockHeader.id!, 0);
     stockHeaderList.remove(stockHeader);
     notifyListeners();
   }

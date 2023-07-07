@@ -114,7 +114,6 @@ class _AddStockItemScreenState extends State<AddStockItemScreen> {
 
   @override
   void dispose() {
-    widget.stockItem?.description;
     _stockNamecontroller.dispose();
     _stockDesccontroller.dispose();
     _stockPriceController.dispose();
