@@ -17,6 +17,12 @@ class StockOrderViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> filterStockHeaderList(int status) async {
+    stockHeaderList.clear();
+    stockHeaderList = await controller.filterStockHeaderList(status);
+    notifyListeners();
+  }
+
   Future<StockHeader> getStockHeader(String syskey) async {
     return await controller.getStockHeader(syskey);
   }

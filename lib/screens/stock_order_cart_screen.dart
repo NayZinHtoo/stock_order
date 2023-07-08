@@ -343,7 +343,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                             }
                             stockProvider.resetStockItemSelected();
                             showToast();
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OrderPaymentSreen(
@@ -352,6 +352,15 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                         totalAmount: _totalAmount,
                                       )),
                             );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => OrderPaymentSreen(
+                            //             pid: _parentId,
+                            //             slipNo: _slipNo,
+                            //             totalAmount: _totalAmount,
+                            //           )),
+                            // );
                             //Navigator.pop(context);
                           }
                         : null,

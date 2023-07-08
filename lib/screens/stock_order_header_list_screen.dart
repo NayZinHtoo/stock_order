@@ -16,6 +16,7 @@ class StockHeaderListScreen extends StatefulWidget {
 
 class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
   late StockOrderViewProvider stockOrderViewProvider;
+  late bool isFilter = false;
 
   @override
   void initState() {
@@ -40,6 +41,15 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
           icon: const Icon(Icons.arrow_back_ios),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              isFilter = !isFilter;
+              isFilter
+                  ? stockOrderViewProvider.filterStockHeaderList(1)
+                  : stockOrderViewProvider.filterStockHeaderList(128);
+            },
+            icon: const Icon(Icons.filter_list_outlined),
+          ),
           IconButton(
             onPressed: () {
               stockOrderViewProvider.getStockHeaderList();

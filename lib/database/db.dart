@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
+import 'package:stock_pos/utils/constant.dart';
 
 class StockDB with ChangeNotifier {
   static Database? _database;
@@ -79,8 +80,9 @@ class StockDB with ChangeNotifier {
         'amount DOUBLE,'
         'status INTEGER DEFAULT 0'
         ')');
+    var syskey = generatesyskey();
     await db.rawInsert(
-        'INSERT INTO pos_payment(syskey, desc, dftPayment,status) VALUES("2023760954881111","Cash", 1,0)');
+        'INSERT INTO pos_payment(syskey, desc, dftPayment,status) VALUES($syskey,"Cash", 1,0)');
 
     // await db.rawInsert(
     //     'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("Lemon","Lemons include many vitamins and nutrients that can provide a boost to your body: Vitamin C: Lemons are a good source of Vitamin C, which promotes immunity, battles infection, heals wounds, and more.", 1500.0, "Drink","assets/lemon.jpeg",0)');

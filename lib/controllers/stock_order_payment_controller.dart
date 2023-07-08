@@ -15,6 +15,8 @@ class StockOrderPaymentController {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
+    print('pos007 table $result #########');
+
     await db.update(
       'pos001',
       {'status': 128},

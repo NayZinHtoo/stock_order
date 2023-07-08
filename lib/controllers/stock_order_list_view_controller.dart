@@ -18,6 +18,16 @@ class StockOrderListViewController {
     return queryResult.map((e) => StockHeader.fromMap(e)).toList();
   }
 
+  Future<List<StockHeader>> filterStockHeaderList(int status) async {
+    db = await StockDB.db.database;
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'pos001',
+      where: 'status = ?',
+      whereArgs: [status],
+    );
+    return queryResult.map((e) => StockHeader.fromMap(e)).toList();
+  }
+
   // retrieve one header data
   Future<StockHeader> getStockHeader(String syskey) async {
     db = await StockDB.db.database;
