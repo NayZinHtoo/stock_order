@@ -24,7 +24,6 @@ class OrderPaymentSreen extends StatefulWidget {
 }
 
 class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
-  //final _controller = TextEditingController();
   PosPayment? posPayment;
   late PosPaymentProvider posPaymentProvider;
   late StockOrderPaymentProvider stockOrderPaymentProvider;
@@ -57,10 +56,8 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
         child: Row(
           children: [
             Expanded(
-                child: DynamicPaymentWidget(
-              index: i,
-              totalAmount: paymentData[i],
-            )),
+              child: DynamicPaymentWidget(index: i),
+            ),
             const SizedBox(
               width: 16,
             ),
@@ -93,6 +90,7 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
         } else {
           posPaymentDropdownData.removeAt(index);
           paymentData.removeAt(index);
+          stockOrderPaymentProvider.setValidAmount(false);
         }
         setState(() {});
       },
@@ -129,8 +127,6 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
 
     paymentData.add(widget.totalAmount);
 
-    //_controller.text = '${widget.totalAmount}';
-
     super.initState();
   }
 
@@ -143,7 +139,6 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
 
   @override
   void dispose() {
-    //_controller.dispose();
     posPaymentDropdownData.clear();
     paymentData.clear();
     super.dispose();
@@ -159,14 +154,6 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
           onPressed: () {
             posPaymentDropdownData.clear();
             paymentData.clear();
-            // Navigator.popUntil(context, (route) => false);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //       builder: (context) => const StockListScreen(
-            //             title: 'Stock Pos',
-            //           )),
-            // );
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_ios),
@@ -306,66 +293,12 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
             const SizedBox(
               height: 20,
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     Expanded(
-            //       flex: 1,
-            //       child: Consumer<PosPaymentProvider>(
-            //           builder: (context, provider, _) {
-            //         provider.paymentList.isNotEmpty
-            //             ? posPayment = provider.paymentList[0]
-            //             : posPayment = null;
-            //         return DropdownButtonFormField(
-            //           value: posPayment,
-            //           decoration: const InputDecoration(
-            //             border: InputBorder.none,
-            //             contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            //           ),
-            //           icon: const Icon(
-            //             Icons.arrow_drop_down_sharp,
-            //             size: 30,
-            //             textDirection: TextDirection.rtl,
-            //           ),
-            //           items: provider.paymentList.map((PosPayment items) {
-            //             return DropdownMenuItem(
-            //               value: items,
-            //               child: Text('${items.desc}'),
-            //             );
-            //           }).toList(),
-            //           onChanged: (PosPayment? newValue) {
-            //             setState(() {
-            //               posPayment = newValue!;
-            //             });
-            //           },
-            //         );
-            //       }),
-            //     ),
-            //     Expanded(
-            //       flex: 1,
-            //       child: TextFormField(
-            //         controller: _controller,
-            //         textAlign: TextAlign.right,
-            //         decoration: const InputDecoration(
-            //           border: InputBorder.none,
-            //           contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            //           hintText: 'Enter your amount',
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-
             Expanded(
               child: _listView(),
             ),
-            //..._getPaymentWidgets(),
-
             const SizedBox(
               height: 10,
             ),
-
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),
@@ -384,7 +317,6 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
                             title: 'Stock Pos',
                           )),
                 );
-                //Navigator.of(context).pop();
               },
               child: const Text(
                 'Go to Home',
@@ -433,7 +365,6 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
                                     title: 'Stock Pos',
                                   )),
                         );
-                        //Navigator.of(context).pop();
                       }
                     : null,
                 child: Text(
@@ -453,35 +384,39 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
 
 class DynamicPaymentWidget extends StatefulWidget {
   final int index;
-  final double totalAmount;
-  const DynamicPaymentWidget(
-      {super.key, required this.index, required this.totalAmount});
+
+  const DynamicPaymentWidget({
+    super.key,
+    required this.index,
+  });
 
   @override
   State<DynamicPaymentWidget> createState() => _DynamicPaymentWidgetState();
 }
 
 class _DynamicPaymentWidgetState extends State<DynamicPaymentWidget> {
-  final _paymentAmountController = TextEditingController();
+  late TextEditingController _paymentAmountController;
   PosPayment? posPayment;
   late double changedValueAmount = 0.0;
   @override
   void initState() {
-    //totalAmount = _OrderPaymentSreenState.paymentData[widget.index];
-    //_paymentAmountController.text = '$totalAmount';
-    _paymentAmountController.text = '${widget.totalAmount}';
+    _paymentAmountController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
     _paymentAmountController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _paymentAmountController.text =
+          '${_OrderPaymentSreenState.paymentData[widget.index]}';
+      posPayment = _OrderPaymentSreenState.posPaymentDropdownData[widget.index];
+    });
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -489,11 +424,9 @@ class _DynamicPaymentWidgetState extends State<DynamicPaymentWidget> {
         Expanded(
           flex: 1,
           child: Consumer<PosPaymentProvider>(builder: (context, provider, _) {
-            provider.paymentList.isNotEmpty
-                ? posPayment = provider.paymentList[0]
-                : posPayment = null;
             return DropdownButtonFormField(
-              value: posPayment,
+              value:
+                  _OrderPaymentSreenState.posPaymentDropdownData[widget.index],
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -509,9 +442,9 @@ class _DynamicPaymentWidgetState extends State<DynamicPaymentWidget> {
                   child: Text('${items.desc}'),
                 );
               }).toList(),
-              onChanged: (PosPayment? newValue) {
+              onChanged: (PosPayment? selectedPosPayment) {
                 setState(() {
-                  posPayment = newValue!;
+                  posPayment = selectedPosPayment!;
                   _OrderPaymentSreenState.posPaymentDropdownData[widget.index] =
                       posPayment!;
                 });
