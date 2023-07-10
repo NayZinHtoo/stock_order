@@ -79,18 +79,15 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
           for (var i = 0; i < paymentData.length; i++) {
             subTotal += paymentData[i];
           }
-          subTotal = widget.totalAmount - subTotal;
-          if (subTotal != 0.0 &&
-              (posPaymentProvider.paymentList.length >
-                  posPaymentDropdownData.length)) {
+          if (subTotal != widget.totalAmount) {
             posPaymentDropdownData.add(posPayment!);
-            paymentData.add(subTotal);
+            paymentData.add(widget.totalAmount - subTotal);
             stockOrderPaymentProvider.setValidAmount(true);
           }
         } else {
+          paymentData[paymentData.length - 1] += paymentData[index];
           posPaymentDropdownData.removeAt(index);
           paymentData.removeAt(index);
-          stockOrderPaymentProvider.setValidAmount(false);
         }
         setState(() {});
       },
@@ -455,6 +452,10 @@ class _DynamicPaymentWidgetState extends State<DynamicPaymentWidget> {
         Expanded(
           flex: 1,
           child: TextFormField(
+            style: TextStyle(
+                color: _OrderPaymentSreenState.paymentData[widget.index] >= 0.0
+                    ? null
+                    : Colors.redAccent),
             controller: _paymentAmountController,
             textAlign: TextAlign.right,
             keyboardType: TextInputType.number,
@@ -463,7 +464,7 @@ class _DynamicPaymentWidgetState extends State<DynamicPaymentWidget> {
               contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               hintText: 'Enter your amount',
             ),
-            onChanged: (value) {
+            onFieldSubmitted: (value) {
               setState(() {
                 changedValueAmount = double.parse(value);
                 _OrderPaymentSreenState.paymentData[widget.index] =

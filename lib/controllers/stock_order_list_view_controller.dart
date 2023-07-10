@@ -12,6 +12,7 @@ class StockOrderListViewController {
     db = await StockDB.db.database;
     final List<Map<String, Object?>> queryResult = await db.query(
       'pos001',
+      orderBy: 'id DESC',
       //where: 'status = ?',
       //whereArgs: [1],
     );
@@ -22,6 +23,7 @@ class StockOrderListViewController {
     db = await StockDB.db.database;
     final List<Map<String, Object?>> queryResult = await db.query(
       'pos001',
+      orderBy: 'id DESC',
       where: 'status = ?',
       whereArgs: [status],
     );
