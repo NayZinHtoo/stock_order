@@ -78,7 +78,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                             Navigator.of(context).pop(true);
                             Navigator.pop(context);
                           },
-                          child: const Text("Disard")),
+                          child: const Text("Discard")),
                       ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(false),
                         child: const Text("Cancel"),
@@ -151,16 +151,6 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                       stockProvider.setStockItemSelected(
                                           stockOrderProvider
                                               .stockDetailList[index].stkId!);
-                                      // for (var stockDetail
-                                      //     in previousStockDetailList) {
-                                      //   if (stockOrderProvider
-                                      //           .stockDetailList[index]
-                                      //           .stkId! ==
-                                      //       stockDetail.id) {
-                                      //     removedStockDetailList
-                                      //         .add(stockDetail);
-                                      //   }
-                                      // }
                                       stockOrderProvider.removeStockOrderItem(
                                           stockOrderProvider
                                               .stockDetailList[index].stkId!);
@@ -352,16 +342,6 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                         totalAmount: _totalAmount,
                                       )),
                             );
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => OrderPaymentSreen(
-                            //             pid: _parentId,
-                            //             slipNo: _slipNo,
-                            //             totalAmount: _totalAmount,
-                            //           )),
-                            // );
-                            //Navigator.pop(context);
                           }
                         : null,
                     child: const Row(

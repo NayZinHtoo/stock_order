@@ -8,8 +8,8 @@ class StockOrderPaymentProvider extends ChangeNotifier {
 
   addOrderPayment(List<StockOrderPayment> orderPaymentList) {
     for (var orderPayment in orderPaymentList) {
-      print(
-          'Id: ${orderPayment.paymentId} Desc: ${orderPayment.paymentdesc} Amount: ${orderPayment.amount}');
+      // print(
+      //     'Id: ${orderPayment.paymentId} Desc: ${orderPayment.paymentdesc} Amount: ${orderPayment.amount}');
       controller.insertPosPayment(orderPayment);
     }
     notifyListeners();

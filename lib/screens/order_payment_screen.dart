@@ -464,6 +464,9 @@ class _DynamicPaymentWidgetState extends State<DynamicPaymentWidget> {
               contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               hintText: 'Enter your amount',
             ),
+            readOnly: _OrderPaymentSreenState.paymentData[widget.index] >= 0.0
+                ? false
+                : true,
             onFieldSubmitted: (value) {
               setState(() {
                 changedValueAmount = double.parse(value);

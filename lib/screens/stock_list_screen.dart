@@ -76,7 +76,7 @@ class _StockListScreenState extends State<StockListScreen> {
               childrenPadding: const EdgeInsets.all(16),
               children: [
                 ListTile(
-                  title: const Text('Stock List'),
+                  title: const Text('List'),
                   onTap: () {
                     // Navigator.push(
                     //   context,
@@ -87,7 +87,7 @@ class _StockListScreenState extends State<StockListScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('New Stock Item'),
+                  title: const Text('New'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -99,11 +99,11 @@ class _StockListScreenState extends State<StockListScreen> {
               ],
             ),
             ExpansionTile(
-              title: const Text('Pos Payment'),
+              title: const Text('Payment'),
               childrenPadding: const EdgeInsets.all(16),
               children: [
                 ListTile(
-                  title: const Text('Payment Type List'),
+                  title: const Text('List'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -113,7 +113,7 @@ class _StockListScreenState extends State<StockListScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('New Payment Type'),
+                  title: const Text('New'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -129,7 +129,7 @@ class _StockListScreenState extends State<StockListScreen> {
               childrenPadding: const EdgeInsets.all(16),
               children: [
                 ListTile(
-                  title: const Text('Sale List'),
+                  title: const Text('List'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -139,7 +139,7 @@ class _StockListScreenState extends State<StockListScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('New Sale'),
+                  title: const Text('New'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -326,12 +326,6 @@ class _StockListScreenState extends State<StockListScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              // Image.asset(
-                                              //   '${provider.stockItemList[index].image}',
-                                              //   width: 100,
-                                              //   height: 150,
-                                              //   fit: BoxFit.fill,
-                                              // ),
                                               Image.memory(
                                                 Uint8List.fromList(base64.decode(
                                                     '${provider.stockItemList[index].image}')),
@@ -380,126 +374,6 @@ class _StockListScreenState extends State<StockListScreen> {
                                                             fontStyle: FontStyle
                                                                 .italic),
                                                       ),
-                                                      // ElevatedButton(
-                                                      //   style: ElevatedButton
-                                                      //       .styleFrom(
-                                                      //     backgroundColor: provider
-                                                      //                 .stockItemList[
-                                                      //                     index]
-                                                      //                 .isSlelected ==
-                                                      //             true
-                                                      //         ? Theme.of(context)
-                                                      //             .colorScheme
-                                                      //             .error
-                                                      //         : AppColor
-                                                      //             .greenColor,
-                                                      //     shape:
-                                                      //         RoundedRectangleBorder(
-                                                      //       borderRadius:
-                                                      //           BorderRadius
-                                                      //               .circular(
-                                                      //                   10.0),
-                                                      //     ),
-                                                      //   ),
-                                                      //   child: provider
-                                                      //               .stockItemList[
-                                                      //                   index]
-                                                      //               .isSlelected ==
-                                                      //           true
-                                                      //       ? const Row(
-                                                      //           mainAxisAlignment:
-                                                      //               MainAxisAlignment
-                                                      //                   .center,
-                                                      //           mainAxisSize:
-                                                      //               MainAxisSize
-                                                      //                   .max,
-                                                      //           children: [
-                                                      //             Text(
-                                                      //               'REMOVE',
-                                                      //               style:
-                                                      //                   TextStyle(
-                                                      //                 fontWeight:
-                                                      //                     FontWeight
-                                                      //                         .w700,
-                                                      //                 color: Colors
-                                                      //                     .white,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         )
-                                                      //       : const Row(
-                                                      //           mainAxisSize:
-                                                      //               MainAxisSize
-                                                      //                   .max,
-                                                      //           mainAxisAlignment:
-                                                      //               MainAxisAlignment
-                                                      //                   .center,
-                                                      //           children: [
-                                                      //             Text(
-                                                      //               'ADD',
-                                                      //               style: TextStyle(
-                                                      //                   color: Colors
-                                                      //                       .white),
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 5.0,
-                                                      //             ),
-                                                      //             Icon(
-                                                      //               Icons
-                                                      //                   .shopping_cart_sharp,
-                                                      //               size: 17,
-                                                      //               color: Colors
-                                                      //                   .white,
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //   onPressed: () {
-                                                      //     provider
-                                                      //         .setStockItemSelected(
-                                                      //       provider
-                                                      //           .stockItemList[
-                                                      //               index]
-                                                      //           .id!,
-                                                      //     );
-                                                      //     if (provider
-                                                      //         .stockItemList[
-                                                      //             index]
-                                                      //         .isSlelected) {
-                                                      //       var syskey =
-                                                      //           generatesyskey();
-                                                      //       final StockDetail stockDetail = StockDetail(
-                                                      //           syskey: syskey,
-                                                      //           stkId: provider
-                                                      //               .stockItemList[
-                                                      //                   index]
-                                                      //               .id,
-                                                      //           stkName: provider
-                                                      //               .stockItemList[
-                                                      //                   index]
-                                                      //               .name,
-                                                      //           qty: 1,
-                                                      //           stkprice: provider
-                                                      //               .stockItemList[
-                                                      //                   index]
-                                                      //               .price,
-                                                      //           amount: provider
-                                                      //               .stockItemList[
-                                                      //                   index]
-                                                      //               .price,
-                                                      //           status: 0);
-                                                      //       stockOrderProvider
-                                                      //           .addStockOrderItem(
-                                                      //               stockDetail);
-                                                      //     } else {
-                                                      //       stockOrderProvider
-                                                      //           .removeStockOrderItem(
-                                                      //               provider
-                                                      //                   .stockItemList[
-                                                      //                       index]
-                                                      //                   .id!);
-                                                      //     }
-                                                      //   },
-                                                      // ),
                                                     ],
                                                   ),
                                                 ),

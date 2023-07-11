@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_pos/screens/order_payment_screen.dart';
 import 'package:stock_pos/screens/stock_order_cart_screen.dart';
 import '../screens/stock_order_detail_screen.dart';
 
@@ -17,6 +16,19 @@ class StockHeaderListScreen extends StatefulWidget {
 class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
   late StockOrderViewProvider stockOrderViewProvider;
   late bool isFilter = false;
+
+  String filterValue = '0';
+  int filterStatus = 0;
+
+  List<DropdownMenuItem<String>> get dropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [
+      const DropdownMenuItem(value: "0", child: Text("All")),
+      const DropdownMenuItem(value: "128", child: Text("Paid")),
+      const DropdownMenuItem(value: "1", child: Text("Unpaid")),
+      const DropdownMenuItem(value: "6", child: Text("Cancel")),
+    ];
+    return menuItems;
+  }
 
   @override
   void initState() {
@@ -40,216 +52,183 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              isFilter = !isFilter;
-              isFilter
-                  ? stockOrderViewProvider.filterStockHeaderList(1)
-                  : stockOrderViewProvider.filterStockHeaderList(128);
-            },
-            icon: const Icon(Icons.filter_list_outlined),
-          ),
-          IconButton(
-            onPressed: () {
-              stockOrderViewProvider.getStockHeaderList();
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-        ],
       ),
-      body: Consumer<StockOrderViewProvider>(builder: (context, provider, _) {
-        return provider.stockHeaderList.isEmpty
-            ? Container(
-                decoration: BoxDecoration(
-                    color: const Color(0xFFF2FDFF),
-                    borderRadius: BorderRadius.circular(16)),
-                padding: const EdgeInsets.all(16),
-                child: const Center(
-                  child: Text(
-                    'No Sale Data',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-              )
-            : ListView.builder(
-                itemCount: provider.stockHeaderList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => StockOrderDetailScreen(
-                                  title: 'Order Detail',
-                                  stockHeader: provider.stockHeaderList[index],
-                                )),
-                      );
-                    },
-                    child: Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.horizontal,
-                      onDismissed: (direction) {
-                        provider
-                            .removeStockHeader(provider.stockHeaderList[index]);
-                      },
-                      confirmDismiss: (direction) async {
-                        return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Confirm"),
-                              content: const Text(
-                                  "Are you sure you wish to delete this item?"),
-                              actions: <Widget>[
-                                ElevatedButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: const Text("Yes")),
-                                ElevatedButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text("No"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      background: Container(
-                        decoration: ShapeDecoration(
-                          color: Colors.red,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
-                        ),
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.delete_sweep, color: Colors.white),
-                            Text(
-                              'Delete',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          SizedBox(
+            width: 136,
+            child: DropdownButtonFormField(
+              value: filterValue,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              items: dropdownItems,
+              onChanged: (String? selectedValue) {
+                setState(() {
+                  filterValue = selectedValue!;
+                  filterStatus = int.parse(filterValue);
+                });
+                if (filterStatus != 0) {
+                  stockOrderViewProvider.filterStockHeaderList(filterStatus);
+                } else {
+                  stockOrderViewProvider.getStockHeaderList();
+                }
+              },
+            ),
+          ),
+          Expanded(
+            child: Consumer<StockOrderViewProvider>(
+                builder: (context, provider, _) {
+              return provider.stockHeaderList.isEmpty
+                  ? Container(
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFF2FDFF),
+                          borderRadius: BorderRadius.circular(16)),
+                      padding: const EdgeInsets.all(16),
+                      child: const Center(
+                        child: Text(
+                          'No Sale Data',
+                          style: TextStyle(fontSize: 18),
                         ),
                       ),
-                      child: Card(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Text(
-                                  'System Key: ${provider.stockHeaderList[index].syskey}'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                    )
+                  : ListView.builder(
+                      itemCount: provider.stockHeaderList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: provider.stockHeaderList[index].status != 1
+                              ? () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            StockOrderDetailScreen(
+                                              title: 'Order Detail',
+                                              stockHeader: provider
+                                                  .stockHeaderList[index],
+                                            )),
+                                  );
+                                }
+                              : () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          StockOrderCartScreen(
+                                        title: 'Sale Stock',
+                                        syskey:
+                                            '${provider.stockHeaderList[index].syskey}',
+                                        slipNo: provider
+                                            .stockHeaderList[index].slipNumber,
+                                      ),
+                                    ),
+                                  );
+                                },
+                          child: Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.horizontal,
+                            onDismissed: (direction) {
+                              provider.removeStockHeader(
+                                  provider.stockHeaderList[index]);
+                            },
+                            confirmDismiss: (direction) async {
+                              return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Confirm"),
+                                    content: const Text(
+                                        "Are you sure you wish to delete this item?"),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: const Text("Yes")),
+                                      ElevatedButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: const Text("No"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            background: Container(
+                              decoration: ShapeDecoration(
+                                color: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16)),
+                              ),
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Flexible(
-                                    flex: 1,
-                                    child: Text(
-                                        'SlipNumber : ${provider.stockHeaderList[index].slipNumber}'),
+                                  Icon(Icons.delete_sweep, color: Colors.white),
+                                  Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.white),
                                   ),
-                                  Flexible(
-                                    flex: 1,
-                                    child: Text(
-                                      'Amount: ${thousandsSeparatorsFormat(provider.stockHeaderList[index].amount!)} MMK',
-                                      textAlign: TextAlign.left,
+                                ],
+                              ),
+                            ),
+                            child: Card(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          child: Text(
+                                              'SlipNo# : ${provider.stockHeaderList[index].slipNumber}'),
+                                        ),
+                                        Flexible(
+                                          flex: 1,
+                                          child: Text(
+                                            'Amount: ${thousandsSeparatorsFormat(provider.stockHeaderList[index].amount!)} MMK',
+                                            textAlign: TextAlign.left,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            'Date: ${provider.stockHeaderList[index].date}'),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                            '${provider.stockHeaderList[index].time}'),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      'Date: ${provider.stockHeaderList[index].date}'),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                      '${provider.stockHeaderList[index].time}'),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: provider.stockHeaderList[index]
-                                                .status ==
-                                            1
-                                        ? () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    StockOrderCartScreen(
-                                                  title: 'Sale Stock',
-                                                  syskey:
-                                                      '${provider.stockHeaderList[index].syskey}',
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        : null,
-                                    child: const Text('Add other items'),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: provider.stockHeaderList[index]
-                                                .status ==
-                                            1
-                                        ? () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OrderPaymentSreen(
-                                                        pid:
-                                                            '${provider.stockHeaderList[index].syskey}',
-                                                        slipNo: provider
-                                                            .stockHeaderList[
-                                                                index]
-                                                            .slipNumber!,
-                                                        totalAmount: provider
-                                                            .stockHeaderList[
-                                                                index]
-                                                            .amount!,
-                                                      )),
-                                            );
-                                          }
-                                        : null,
-                                    child: const Text('Bill Payment'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-      }),
+                          ),
+                        );
+                      },
+                    );
+            }),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

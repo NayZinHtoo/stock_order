@@ -55,9 +55,8 @@ class StockOrderController {
 
   Future<void> deleteStockDetail(String parentId) async {
     db = await StockDB.db.database;
-    await db.update(
+    await db.delete(
       'pos002',
-      {'status': 1},
       where: 'parentId = ?',
       whereArgs: [parentId],
     );

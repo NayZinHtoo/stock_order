@@ -21,7 +21,7 @@ class _POSPaymentSetupScreenState extends State<POSPaymentSetupScreen> {
   bool isNew = true;
   bool value = false;
 
-  late int id;
+  late int id = 0;
   late String desc;
 
   @override
@@ -36,7 +36,16 @@ class _POSPaymentSetupScreenState extends State<POSPaymentSetupScreen> {
       setState(() {
         value = widget.posPayment!.dftPayment == 0 ? false : true;
       });
+    } else {
+      Future.delayed(Duration.zero, () async {
+        _getPaymentItemCount();
+      });
     }
+  }
+
+  Future<void> _getPaymentItemCount() async {
+    id = await posPaymentProvider.getPaymentItemCount();
+    setState(() {});
   }
 
   @override
@@ -115,7 +124,7 @@ class _POSPaymentSetupScreenState extends State<POSPaymentSetupScreen> {
                           contentPadding:
                               const EdgeInsets.fromLTRB(10, 10, 10, 0),
                           hintText:
-                              '${widget.posPayment == null ? posPaymentProvider.paymentList.length + 1 : id}',
+                              '${widget.posPayment == null ? id + 1 : id}',
                         ),
                       ),
                     ),

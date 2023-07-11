@@ -14,6 +14,10 @@ class PosPaymentProvider extends ChangeNotifier {
     return paymentList;
   }
 
+  getPaymentItemCount() async {
+    return await controller.getPaymentItemCount();
+  }
+
   addPosPayment(PosPayment posPayment) async {
     await controller.insertPosPayment(posPayment);
     if (posPayment.dftPayment == 1) {

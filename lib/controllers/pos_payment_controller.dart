@@ -57,4 +57,12 @@ class PosPaymentController {
       whereArgs: [posPayment.id],
     );
   }
+
+  Future<int> getPaymentItemCount() async {
+    db = await StockDB.db.database;
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'pos_payment',
+    );
+    return queryResult.map((e) => PosPayment.fromMap(e)).toList().length;
+  }
 }
