@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_pos/models/stock_item.dart';
 import 'package:stock_pos/providers/stock_item_provider.dart';
 import 'package:stock_pos/providers/stock_order_provider.dart';
 import 'package:stock_pos/screens/custom_search_delegate.dart';
 import 'package:stock_pos/screens/order_payment_screen.dart';
+import '../models/stock_detail.dart';
 import '../models/stock_header.dart';
 import '../utils/constant.dart';
 
@@ -24,27 +26,35 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
   late StockOrderProvider stockOrderProvider;
   late StockProvider stockProvider;
   late StockHeader stockHeader;
+  late TextEditingController _stockCodeController;
+
+  List<StockItem> stockItemList = [];
 
   late double _totalAmount = 0.0;
   late String _parentId = '';
   late int _slipNo = 0;
 
-  //late List<StockDetail> previousStockDetailList;
-  //late List<StockDetail> removedStockDetailList;
-
   @override
   void initState() {
+    _stockCodeController = TextEditingController();
     stockOrderProvider =
         Provider.of<StockOrderProvider>(context, listen: false);
     stockProvider = Provider.of<StockProvider>(context, listen: false);
-    stockProvider.getStockItem();
+
+    Future.delayed(Duration.zero, () async {
+      await _getStockItemList();
+    });
     if (widget.syskey.isNotEmpty) {
       stockOrderProvider.getStockOrderDetilList(widget.syskey);
       _parentId = widget.syskey;
       _slipNo = widget.slipNo!;
-      //previousStockDetailList = stockOrderProvider.stockDetailList;
     }
     super.initState();
+  }
+
+  Future<void> _getStockItemList() async {
+    stockItemList = await stockProvider.getStockItem();
+    setState(() {});
   }
 
   void showToast() {
@@ -117,6 +127,60 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: TextFormField(
+                      controller: _stockCodeController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        hintText: 'Enter stock code to sale',
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        if (_stockCodeController.text.isNotEmpty) {
+                          StockItem? stockItem;
+                          int index = stockItemList.indexWhere((stockItem) =>
+                              stockItem.id ==
+                              int.parse(_stockCodeController.text));
+
+                          if (index >= 0) {
+                            stockItem = stockItemList[index];
+                            var syskey = generatesyskey();
+                            final StockDetail stockDetail = StockDetail(
+                                syskey: syskey,
+                                stkId: stockItem.id,
+                                stkName: stockItem.name,
+                                qty: 1,
+                                stkprice: stockItem.price,
+                                amount: stockItem.price,
+                                status: 0);
+                            stockOrderProvider.addStockOrderItem(stockDetail);
+                            _stockCodeController.text = '';
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: 'Stock item not found',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white);
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.add))
+                ],
+              ),
+            ),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -124,8 +188,6 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                     borderRadius: BorderRadius.circular(16)),
                 height: double.maxFinite,
                 width: double.maxFinite,
-                //padding: const EdgeInsets.all(8.0),
-                //margin: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
