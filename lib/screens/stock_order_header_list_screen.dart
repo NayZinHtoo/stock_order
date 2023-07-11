@@ -22,10 +22,10 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
 
   List<DropdownMenuItem<String>> get dropdownItems {
     List<DropdownMenuItem<String>> menuItems = [
-      const DropdownMenuItem(value: "0", child: Text("All")),
-      const DropdownMenuItem(value: "128", child: Text("Paid")),
-      const DropdownMenuItem(value: "1", child: Text("Unpaid")),
-      const DropdownMenuItem(value: "6", child: Text("Cancel")),
+      const DropdownMenuItem(value: "0", child: Text("all")),
+      const DropdownMenuItem(value: "1", child: Text("saved")),
+      const DropdownMenuItem(value: "128", child: Text("paid")),
+      const DropdownMenuItem(value: "6", child: Text("void")),
     ];
     return menuItems;
   }

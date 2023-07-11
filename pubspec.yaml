@@ -73,6 +73,7 @@ flutter:
     - assets/strawberry.jpg
     - assets/rice.jpg
     - assets/noodle.jpeg
+    - assets/person.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

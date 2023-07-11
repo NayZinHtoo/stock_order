@@ -65,11 +65,15 @@ class _StockListScreenState extends State<StockListScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+            UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(
+                color: AppColor.greenColor,
               ),
-              child: Text('Sale Stock POS'),
+              accountName: const Text("Sale Admin"),
+              accountEmail: const Text("testing@mit.co"),
+              currentAccountPicture: CircleAvatar(
+                child: Image.asset('assets/person.png'),
+              ),
             ),
             ExpansionTile(
               title: const Text('Stock'),
