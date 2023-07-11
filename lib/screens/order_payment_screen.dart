@@ -339,18 +339,16 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
                         for (var i = 0;
                             i < posPaymentDropdownData.length;
                             i++) {
-                          if (paymentData[i] > 0.0) {
-                            var syskey = generatesyskey();
-                            var orderPayment = StockOrderPayment(
-                              syskey: syskey,
-                              parentId: widget.pid,
-                              paymentId: posPaymentDropdownData[i].id,
-                              paymentdesc: posPaymentDropdownData[i].desc,
-                              amount: paymentData[i],
-                              status: 0,
-                            );
-                            orderPaymentList.add(orderPayment);
-                          }
+                          var syskey = generatesyskey();
+                          var orderPayment = StockOrderPayment(
+                            syskey: syskey,
+                            parentId: widget.pid,
+                            paymentId: posPaymentDropdownData[i].syskey,
+                            paymentdesc: posPaymentDropdownData[i].desc,
+                            amount: paymentData[i],
+                            status: 0,
+                          );
+                          orderPaymentList.add(orderPayment);
                         }
                         provider.addOrderPayment(orderPaymentList);
                         showToast('Pay Bill Successful');

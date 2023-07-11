@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_pos/models/stock_header.dart';
 
+import '../models/stock_order_payment.dart';
+import '../providers/stock_order_payment_provider.dart';
 import '../providers/stock_order_view_provider.dart';
 import '../utils/constant.dart';
 
@@ -18,15 +20,35 @@ class StockOrderDetailScreen extends StatefulWidget {
 
 class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
   late StockOrderViewProvider stockOrderViewProvider;
+  late StockOrderPaymentProvider stockOrderPaymentProvider;
+
+  double paidAmount = 0.0;
+  double changeAmount = 0.0;
 
   @override
   void initState() {
     stockOrderViewProvider =
         Provider.of<StockOrderViewProvider>(context, listen: false);
-
+    stockOrderPaymentProvider =
+        Provider.of<StockOrderPaymentProvider>(context, listen: false);
     stockOrderViewProvider.getStockDetailList(widget.stockHeader.syskey!);
 
+    Future.delayed(Duration.zero, () async {
+      await _getStockPaymentList();
+    });
+
     super.initState();
+  }
+
+  Future<void> _getStockPaymentList() async {
+    paidAmount = 0.0;
+    List<StockOrderPayment> list = await stockOrderPaymentProvider
+        .getStockPaymentList(widget.stockHeader.syskey!);
+    for (var payment in list) {
+      paidAmount += payment.amount!;
+    }
+    changeAmount = paidAmount - widget.stockHeader.amount!;
+    setState(() {});
   }
 
   @override
@@ -129,13 +151,59 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
               }),
             ),
             const Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(10.0),
               child: Text(
                   '---------------------------------------------------------------'),
             ),
+            // Expanded(
+            //   child: Consumer<StockOrderPaymentProvider>(
+            //       builder: (context, provider, _) {
+            //     return ListView.builder(
+            //       itemCount: provider.orderPaymentList.length,
+            //       itemBuilder: (BuildContext context, int index) {
+            //         return Card(
+            //           //margin: const EdgeInsets.all(18),
+            //           child: Padding(
+            //             padding: const EdgeInsets.all(18.0),
+            //             child: Column(
+            //               mainAxisAlignment: MainAxisAlignment.center,
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               children: [
+            //                 Row(
+            //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                   crossAxisAlignment: CrossAxisAlignment.start,
+            //                   children: [
+            //                     provider.orderPaymentList[index].amount! > 0
+            //                         ? Text(
+            //                             '${provider.orderPaymentList[index].paymentdesc}')
+            //                         : const Text(
+            //                             'Change',
+            //                             style:
+            //                                 TextStyle(color: Colors.redAccent),
+            //                           ),
+            //                     Text(
+            //                       '${thousandsSeparatorsFormat(provider.orderPaymentList[index].amount!)} MMK',
+            //                       style: TextStyle(
+            //                         color: provider.orderPaymentList[index]
+            //                                     .amount! <
+            //                                 0
+            //                             ? Colors.redAccent
+            //                             : null,
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //     );
+            //   }),
+            // ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,9 +216,6 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                           flex: 1,
                           child: Text('Total Item(s) '),
                         ),
-                        // const SizedBox(
-                        //   width: 150,
-                        // ),
                         Flexible(
                           flex: 1,
                           child: Consumer<StockOrderViewProvider>(
@@ -168,13 +233,42 @@ class _StockOrderDetailScreenState extends State<StockOrderDetailScreen> {
                           flex: 1,
                           child: Text('Total Amount'),
                         ),
-                        // const SizedBox(
-                        //   width: 100,
-                        // ),
                         Flexible(
                           flex: 1,
                           child: Text(
                               '${thousandsSeparatorsFormat(widget.stockHeader.amount!)} MMK'),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Flexible(
+                          flex: 1,
+                          child: Text('Paid'),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Text(
+                              '${thousandsSeparatorsFormat(paidAmount)} MMK'),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Flexible(
+                          flex: 1,
+                          child: Text('Change'),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Text(
+                            '${thousandsSeparatorsFormat(changeAmount)} MMK',
+                            style: const TextStyle(color: Colors.redAccent),
+                          ),
                         ),
                       ],
                     ),

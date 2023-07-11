@@ -6,6 +6,16 @@ import '../models/stock_order_payment.dart';
 class StockOrderPaymentController {
   late Database db;
 
+  Future<List<StockOrderPayment>> getStockPaymentList(String parentId) async {
+    db = await StockDB.db.database;
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'pos007',
+      where: "parentId = ?",
+      whereArgs: [parentId],
+    );
+    return queryResult.map((e) => StockOrderPayment.fromMap(e)).toList();
+  }
+
   // insert data
   Future<int> insertPosPayment(StockOrderPayment orderPayment) async {
     db = await StockDB.db.database;

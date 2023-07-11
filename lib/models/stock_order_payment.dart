@@ -2,7 +2,7 @@ class StockOrderPayment {
   int? id;
   String? syskey;
   String? parentId;
-  int? paymentId;
+  String? paymentId;
   String? paymentdesc;
   double? amount;
   int? status = 0;
