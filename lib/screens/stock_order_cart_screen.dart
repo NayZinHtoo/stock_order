@@ -9,12 +9,12 @@ import 'package:stock_pos/screens/order_payment_screen.dart';
 import '../models/stock_detail.dart';
 import '../models/stock_header.dart';
 import '../utils/constant.dart';
+import '../widgets/drawer_widget.dart';
 
 class StockOrderCartScreen extends StatefulWidget {
   const StockOrderCartScreen(
-      {super.key, required this.title, required this.syskey, this.slipNo = 0});
+      {super.key, required this.syskey, this.slipNo = 0});
 
-  final String title;
   final String syskey;
   final int? slipNo;
 
@@ -34,6 +34,8 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
   late String _parentId = '';
   late int _slipNo = 0;
 
+  late bool isNew = true;
+
   @override
   void dispose() {
     _stockCodeController.dispose();
@@ -51,6 +53,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
       await _getStockItemList();
     });
     if (widget.syskey.isNotEmpty) {
+      isNew = false;
       stockOrderProvider.getStockOrderDetilList(widget.syskey);
       _parentId = widget.syskey;
       _slipNo = widget.slipNo!;
@@ -77,64 +80,67 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            if (stockOrderProvider.stockDetailList.isNotEmpty) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Row(
-                      children: [
-                        Icon(
-                          Icons.warning_amber,
-                          color: Colors.amber,
-                        ),
-                        Text("Warning"),
-                      ],
-                    ),
-                    content: const Text(
-                        "Are you sure you wish to discard your order item(s)?"),
-                    actions: <Widget>[
-                      ElevatedButton(
-                          onPressed: () {
-                            stockOrderProvider.clearData();
-                            Navigator.of(context).pop(true);
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Discard")),
-                      ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text("Cancel"),
-                      ),
-                    ],
-                  );
+        leading: isNew
+            ? null
+            : IconButton(
+                onPressed: () {
+                  if (stockOrderProvider.stockDetailList.isNotEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Row(
+                            children: [
+                              Icon(
+                                Icons.warning_amber,
+                                color: Colors.amber,
+                              ),
+                              Text("Warning"),
+                            ],
+                          ),
+                          content: const Text(
+                              "Are you sure you wish to discard your order item(s)?"),
+                          actions: <Widget>[
+                            ElevatedButton(
+                                onPressed: () {
+                                  stockOrderProvider.clearData();
+                                  Navigator.of(context).pop(true);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Discard")),
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text("Cancel"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    Navigator.pop(context);
+                  }
                 },
-              );
-            } else {
-              Navigator.pop(context);
-            }
-          },
-          icon: const Icon(Icons.close),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(
-                  context: context,
-                  delegate: CustomSearchDelegate(
-                      stockItemList: stockProvider.stockItemList));
-            },
-            icon: const Icon(Icons.search),
-          ),
-        ],
-        title: Column(
+                icon: const Icon(Icons.close),
+              ),
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       showSearch(
+        //           context: context,
+        //           delegate: CustomSearchDelegate(
+        //               stockItemList: stockProvider.stockItemList));
+        //     },
+        //     icon: const Icon(Icons.search),
+        //   ),
+        // ],
+        title: const Column(
           children: [
-            Text(widget.title),
-            const Icon(Icons.shopping_cart),
+            Text('SALE ITEMS'),
+            //const Icon(Icons.shopping_cart),
           ],
         ),
       ),
+      drawer: isNew ? const DrawerWidget() : null,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -158,15 +164,11 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                         hintText: 'Enter stock code to sale',
                       ),
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        if (_stockCodeController.text.isNotEmpty) {
+                      onFieldSubmitted: (value) {
+                        if (value.isNotEmpty) {
                           StockItem? stockItem;
-                          int index = stockItemList.indexWhere((stockItem) =>
-                              stockItem.id ==
-                              int.parse(_stockCodeController.text));
+                          int index = stockItemList.indexWhere(
+                              (stockItem) => stockItem.id == int.parse(value));
 
                           if (index >= 0) {
                             stockItem = stockItemList[index];
@@ -191,7 +193,28 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                           }
                         }
                       },
-                      icon: const Icon(Icons.add))
+                    ),
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                      color: AppColor.greenColor,
+                    ),
+                    child: IconButton(
+                        onPressed: () {
+                          showSearch(
+                              context: context,
+                              delegate: CustomSearchDelegate(
+                                  stockItemList: stockProvider.stockItemList));
+                        },
+                        icon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        )),
+                  )
                 ],
               ),
             ),
@@ -206,8 +229,8 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'SALE ITEMS',
+                    Text(
+                      isNew ? 'New' : 'Saved',
                       textAlign: TextAlign.left,
                       style: TextStyle(color: Colors.grey),
                     ),

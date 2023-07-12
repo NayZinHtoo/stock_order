@@ -116,7 +116,6 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           StockOrderCartScreen(
-                                        title: 'Sale Stock',
                                         syskey:
                                             '${provider.stockHeaderList[index].syskey}',
                                         slipNo: provider
@@ -231,11 +230,11 @@ class _StockHeaderListScreenState extends State<StockHeaderListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Navigator.popUntil(context, (route) => false);
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => const StockOrderCartScreen(
-                title: 'Sale Stock',
                 syskey: '',
               ),
             ),

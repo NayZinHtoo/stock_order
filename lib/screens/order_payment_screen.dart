@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_pos/models/pos_payment.dart';
 import 'package:stock_pos/providers/pos_payment_provider.dart';
-import 'package:stock_pos/screens/stock_list_screen.dart';
+import 'package:stock_pos/screens/stock_order_cart_screen.dart';
 import 'package:stock_pos/utils/constant.dart';
 
 import '../models/stock_order_payment.dart';
@@ -99,7 +99,7 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Icon(
-          (add) ? Icons.add : Icons.remove,
+          (add) ? Icons.add : Icons.close,
           color: Colors.white,
         ),
       ),
@@ -115,7 +115,10 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
     stockOrderViewProvider =
         Provider.of<StockOrderViewProvider>(context, listen: false);
     stockOrderViewProvider.getStockDetailList(widget.pid);
-    stockOrderPaymentProvider.setValidAmount(true);
+
+    Future.delayed(Duration.zero, () async {
+      await stockOrderPaymentProvider.setValidAmount(true);
+    });
 
     saleTotalAmount = widget.totalAmount;
 
@@ -311,9 +314,10 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const StockListScreen(
-                            title: 'Stock Pos',
-                          )),
+                    builder: (context) => const StockOrderCartScreen(
+                      syskey: '',
+                    ),
+                  ),
                 );
               },
               child: const Text(
@@ -357,9 +361,10 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const StockListScreen(
-                                    title: 'Stock Pos',
-                                  )),
+                            builder: (context) => const StockOrderCartScreen(
+                              syskey: '',
+                            ),
+                          ),
                         );
                       }
                     : null,

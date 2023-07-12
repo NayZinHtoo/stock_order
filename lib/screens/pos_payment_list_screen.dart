@@ -25,7 +25,7 @@ class _POSPaymentListScreenState extends State<POSPaymentListScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Payment List'),
+        title: const Text('Payment Types'),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

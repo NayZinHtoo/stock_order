@@ -5,12 +5,8 @@ import 'package:chips_choice/chips_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_pos/providers/stock_order_provider.dart';
-import 'package:stock_pos/screens/pos_payment_list_screen.dart';
-import 'package:stock_pos/screens/pos_payment_setup_screen.dart';
 import 'package:stock_pos/screens/stock_item_add_screen.dart';
 import 'package:stock_pos/screens/stock_item_detail_screen.dart';
-import 'package:stock_pos/screens/stock_order_cart_screen.dart';
-import 'package:stock_pos/screens/stock_order_header_list_screen.dart';
 import '../providers/stock_item_provider.dart';
 import '../utils/constant.dart';
 
@@ -57,108 +53,15 @@ class _StockListScreenState extends State<StockListScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
         title: Text(widget.title),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            UserAccountsDrawerHeader(
-              decoration: const BoxDecoration(
-                color: AppColor.greenColor,
-              ),
-              accountName: const Text("Sale Admin"),
-              accountEmail: const Text("testing@mit.co"),
-              currentAccountPicture: CircleAvatar(
-                child: Image.asset('assets/person.png'),
-              ),
-            ),
-            ExpansionTile(
-              title: const Text('Stock'),
-              childrenPadding: const EdgeInsets.all(16),
-              children: [
-                ListTile(
-                  title: const Text('List'),
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const POSPaymentListScreen()),
-                    // );
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: const Text('New'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AddStockItemScreen()),
-                    );
-                  },
-                ),
-              ],
-            ),
-            ExpansionTile(
-              title: const Text('Payment'),
-              childrenPadding: const EdgeInsets.all(16),
-              children: [
-                ListTile(
-                  title: const Text('List'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const POSPaymentListScreen()),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text('New'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const POSPaymentSetupScreen()),
-                    );
-                  },
-                ),
-              ],
-            ),
-            ExpansionTile(
-              title: const Text('Sale'),
-              childrenPadding: const EdgeInsets.all(16),
-              children: [
-                ListTile(
-                  title: const Text('List'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const StockHeaderListScreen()),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text('New'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const StockOrderCartScreen(
-                          title: 'Sale Stock',
-                          syskey: '',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      //drawer: const DrawerWidget(),
       body: Column(
         children: [
           Container(

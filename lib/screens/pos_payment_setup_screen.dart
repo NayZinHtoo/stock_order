@@ -158,7 +158,7 @@ class _POSPaymentSetupScreenState extends State<POSPaymentSetupScreen> {
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    hintText: 'Enter payment description',
+                    hintText: 'Eg.Cash, Wave Pay, etc...',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

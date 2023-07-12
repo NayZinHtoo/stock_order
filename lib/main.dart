@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:stock_pos/providers/pos_payment_provider.dart';
 import 'package:stock_pos/providers/stock_add_provider.dart';
 import 'package:stock_pos/providers/stock_order_payment_provider.dart';
+import 'package:stock_pos/screens/stock_order_cart_screen.dart';
 import 'package:stock_pos/utils/color_schemes.g.dart';
 import '../providers/stock_item_provider.dart';
-import '../screens/stock_list_screen.dart';
 import '../providers/stock_order_provider.dart';
 import '../providers/stock_order_view_provider.dart';
 
@@ -47,7 +47,9 @@ class MyApp extends StatelessWidget {
               border: InputBorder.none,
             )),
         darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-        home: const StockListScreen(title: 'ITEMS'),
+        home: const StockOrderCartScreen(
+          syskey: '',
+        ),
       ),
     );
   }
