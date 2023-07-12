@@ -19,8 +19,9 @@ class AddStockItemScreen extends StatefulWidget {
 }
 
 class _AddStockItemScreenState extends State<AddStockItemScreen> {
+  late final StockProvider stockProvider;
   final _stockNamecontroller = TextEditingController();
-  final _stockDesccontroller = TextEditingController();
+  final _stockCodecontroller = TextEditingController();
   final _stockPriceController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -59,7 +60,7 @@ class _AddStockItemScreenState extends State<AddStockItemScreen> {
   }
 
   Future saveStockItem(BuildContext context) async {
-    final stockProvider = Provider.of<StockProvider>(context, listen: false);
+    //final stockProvider = Provider.of<StockProvider>(context, listen: false);
     final stockAddProvider =
         Provider.of<StockAddProvider>(context, listen: false);
     if (imageString == null || imageString == "") {
@@ -72,7 +73,6 @@ class _AddStockItemScreenState extends State<AddStockItemScreen> {
       if (btnString == 'Save') {
         var stockItem = StockItem(
           name: _stockNamecontroller.text,
-          description: _stockDesccontroller.text,
           price: double.parse(_stockPriceController.text),
           category: category,
           image: imageString,
@@ -85,7 +85,6 @@ class _AddStockItemScreenState extends State<AddStockItemScreen> {
         var stockItem = StockItem(
           id: widget.stockItem?.id,
           name: _stockNamecontroller.text,
-          description: _stockDesccontroller.text,
           price: double.parse(_stockPriceController.text),
           category: category,
           image: imageString,
@@ -99,13 +98,16 @@ class _AddStockItemScreenState extends State<AddStockItemScreen> {
 
   @override
   void initState() {
+    stockProvider = Provider.of<StockProvider>(context, listen: false);
     final name = widget.stockItem != null ? widget.stockItem?.name : '';
-    final desc = widget.stockItem != null ? widget.stockItem?.description : '';
+    final code = widget.stockItem != null
+        ? widget.stockItem?.id
+        : stockProvider.allStockItemList.length + 1;
     final price = widget.stockItem != null ? '${widget.stockItem?.price}' : '';
 
     btnString = widget.stockItem != null ? 'Update' : 'Save';
+    _stockCodecontroller.text = '${code!}';
     _stockNamecontroller.text = name!;
-    _stockDesccontroller.text = desc!;
     _stockPriceController.text = price;
     category = widget.stockItem != null ? widget.stockItem?.category : 'Food';
     imageString = widget.stockItem != null ? widget.stockItem?.image : '';
@@ -114,8 +116,8 @@ class _AddStockItemScreenState extends State<AddStockItemScreen> {
 
   @override
   void dispose() {
+    _stockCodecontroller.dispose();
     _stockNamecontroller.dispose();
-    _stockDesccontroller.dispose();
     _stockPriceController.dispose();
     super.dispose();
   }
@@ -131,7 +133,7 @@ class _AddStockItemScreenState extends State<AddStockItemScreen> {
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        title: const Text('ADD ITEMS'),
+        title: const Text('ITEMS'),
       ),
       body: Form(
         key: _formKey,
@@ -141,41 +143,35 @@ class _AddStockItemScreenState extends State<AddStockItemScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text("Stock code"),
+                TextFormField(
+                  controller: _stockCodecontroller,
+                  decoration: const InputDecoration(),
+                  readOnly: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '*Please enter stock code';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 18),
                 const Text("Stock name"),
                 TextFormField(
                   controller: _stockNamecontroller,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter stock name',
-                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '*Please enter stock name';
                     }
                     return null;
                   },
-                ),
-                const SizedBox(height: 18),
-                const Text("Stock description"),
-                TextFormField(
-                  controller: _stockDesccontroller,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '*Please enter stock description';
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    hintText: 'Enter stock description',
-                  ),
-                  maxLines: 4,
+                  decoration: const InputDecoration(),
                 ),
                 const SizedBox(height: 18),
                 const Text("Stock Price"),
                 TextFormField(
                   controller: _stockPriceController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter stock price',
-                  ),
+                  decoration: const InputDecoration(),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {

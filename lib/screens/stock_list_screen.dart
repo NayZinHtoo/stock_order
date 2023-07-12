@@ -42,8 +42,6 @@ class _StockListScreenState extends State<StockListScreen> {
   @override
   void initState() {
     stockProvider = Provider.of<StockProvider>(context, listen: false);
-    // stockOrderProvider =
-    //     Provider.of<StockOrderProvider>(context, listen: false);
     stockProvider.getStockItem();
     super.initState();
   }
@@ -129,7 +127,7 @@ class _StockListScreenState extends State<StockListScreen> {
               ],
             ),
             ExpansionTile(
-              title: const Text('Sale Stock'),
+              title: const Text('Sale'),
               childrenPadding: const EdgeInsets.all(16),
               children: [
                 ListTile(
@@ -232,18 +230,6 @@ class _StockListScreenState extends State<StockListScreen> {
                 ),
               ],
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Text(
-                'Stocks Items',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-            ]),
           ),
           Expanded(
             child: Container(
@@ -365,12 +351,6 @@ class _StockListScreenState extends State<StockListScreen> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        '    ${provider.stockItemList[index].description}',
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 2,
-                                                      ),
-                                                      Text(
                                                         '${thousandsSeparatorsFormat(provider.stockItemList[index].price!)} MMK',
                                                         style: const TextStyle(
                                                             fontWeight:
@@ -410,34 +390,6 @@ class _StockListScreenState extends State<StockListScreen> {
           ),
         ],
       ),
-      // floatingActionButton: Consumer<StockOrderProvider>(
-      //   builder: (context, provider, _) {
-      //     return Badge(
-      //       alignment: AlignmentDirectional.topEnd,
-      //       isLabelVisible: provider.stockDetailList.isEmpty ? false : true,
-      //       label: Text('${provider.stockDetailList.length}'),
-      //       child: FloatingActionButton(
-      //         onPressed: () {
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //               builder: (context) => const StockOrderCartScreen(
-      //                 title: 'Sale Stock',
-      //                 syskey: '',
-      //               ),
-      //             ),
-      //           );
-      //         },
-      //         backgroundColor: AppColor.greenColor,
-      //         tooltip: 'Order',
-      //         child: const Icon(
-      //           Icons.shopping_cart,
-      //           color: Colors.white,
-      //         ),
-      //       ),
-      //     );
-      //   },
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

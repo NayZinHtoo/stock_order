@@ -38,7 +38,6 @@ class StockDB with ChangeNotifier {
     await db.execute('CREATE TABLE IF NOT EXISTS stock_item('
         'id INTEGER PRIMARY KEY AUTOINCREMENT,'
         'name TEXT,'
-        'description TEXT,'
         'price DOUBLE DEFAULT 0,'
         'category TEXT,'
         'image TEXT,'

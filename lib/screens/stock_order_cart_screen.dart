@@ -35,6 +35,12 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
   late int _slipNo = 0;
 
   @override
+  void dispose() {
+    _stockCodeController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     _stockCodeController = TextEditingController();
     stockOrderProvider =
@@ -78,7 +84,15 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text("Warning"),
+                    title: const Row(
+                      children: [
+                        Icon(
+                          Icons.warning_amber,
+                          color: Colors.amber,
+                        ),
+                        Text("Warning"),
+                      ],
+                    ),
                     content: const Text(
                         "Are you sure you wish to discard your order item(s)?"),
                     actions: <Widget>[
@@ -166,10 +180,10 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                                 amount: stockItem.price,
                                 status: 0);
                             stockOrderProvider.addStockOrderItem(stockDetail);
-                            _stockCodeController.text = '';
+                            _stockCodeController.clear();
                           } else {
                             Fluttertoast.showToast(
-                                msg: 'Stock item not found',
+                                msg: 'Item not found',
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 backgroundColor: Colors.black,

@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
               border: InputBorder.none,
             )),
         darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-        home: const StockListScreen(title: 'Stock Pos'),
+        home: const StockListScreen(title: 'ITEMS'),
       ),
     );
   }

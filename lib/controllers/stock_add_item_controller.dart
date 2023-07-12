@@ -19,7 +19,7 @@ class AddStockItemController {
 
     /* Method 2 */
     final result = await db.rawInsert(
-        'INSERT INTO stock_item(name, description, price,category,image,status) VALUES("${stockItem.name}","${stockItem.description}", ${stockItem.price}, "${stockItem.category}","${stockItem.image}",0)');
+        'INSERT INTO stock_item(name,price,category,image,status) VALUES("${stockItem.name}", ${stockItem.price}, "${stockItem.category}","${stockItem.image}",0)');
     return result;
 
     /* Test Method 2 */

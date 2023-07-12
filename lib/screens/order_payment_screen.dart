@@ -115,6 +115,7 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
     stockOrderViewProvider =
         Provider.of<StockOrderViewProvider>(context, listen: false);
     stockOrderViewProvider.getStockDetailList(widget.pid);
+    stockOrderPaymentProvider.setValidAmount(true);
 
     saleTotalAmount = widget.totalAmount;
 
