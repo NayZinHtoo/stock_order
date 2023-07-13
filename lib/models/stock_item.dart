@@ -17,22 +17,40 @@ class StockItem {
     this.isSlelected = false,
   });
 
-  StockItem.fromMap(Map<String, dynamic> result)
-      : id = result["id"],
-        name = result["name"],
-        price = result["price"],
-        category = result["category"],
-        image = result["image"],
-        status = result["status"],
-        isSlelected = false;
+  factory StockItem.fromJson(Map<String, dynamic> result) => StockItem(
+        id: result["id"],
+        name: result["name"],
+        price: result["price"],
+        category: result["category"],
+        image: result["image"],
+        status: result["status"],
+        isSlelected: false,
+      );
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "price": price,
+        "category": category,
+        "image": image,
+        "status": status,
+      };
 
-  Map<String, Object> toMap() {
-    return {
-      'name': name!,
-      'price': price!,
-      'category': category!,
-      'image': image!,
-      'status': status!,
-    };
-  }
+  // StockItem.fromMap(Map<String, dynamic> result)
+  //     : id = result["id"],
+  //       name = result["name"],
+  //       price = result["price"],
+  //       category = result["category"],
+  //       image = result["image"],
+  //       status = result["status"],
+  //       isSlelected = false;
+
+  // Map<String, Object> toMap() {
+  //   return {
+  //     'name': name!,
+  //     'price': price!,
+  //     'category': category!,
+  //     'image': image!,
+  //     'status': status!,
+  //   };
+  // }
 }

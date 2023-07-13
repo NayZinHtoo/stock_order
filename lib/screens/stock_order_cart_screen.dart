@@ -122,17 +122,6 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                 },
                 icon: const Icon(Icons.close),
               ),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {
-        //       showSearch(
-        //           context: context,
-        //           delegate: CustomSearchDelegate(
-        //               stockItemList: stockProvider.stockItemList));
-        //     },
-        //     icon: const Icon(Icons.search),
-        //   ),
-        // ],
         title: const Column(
           children: [
             Text('SALE ITEMS'),
@@ -232,7 +221,7 @@ class _StockOrderCartScreenState extends State<StockOrderCartScreen> {
                     Text(
                       isNew ? 'New' : 'Saved',
                       textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                     ),
                     Consumer<StockOrderProvider>(
                       builder: (context, provider, _) {

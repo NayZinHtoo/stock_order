@@ -48,57 +48,64 @@ class CustomSearchDelegate extends SearchDelegate {
         matchQuery.add(stockItem);
       }
     }
-    return ListView.separated(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return InkWell(
-          onTap: () {
-            var syskey = generatesyskey();
-            final StockDetail stockDetail = StockDetail(
-                syskey: syskey,
-                stkId: result.id,
-                stkName: result.name,
-                qty: 1,
-                stkprice: result.price,
-                amount: result.price,
-                status: 0);
-            stockOrderProvider.addStockOrderItem(stockDetail);
-            Navigator.of(context).pop();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  '${result.id}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  result.name!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  '${thousandsSeparatorsFormat(result.price!)} MMK',
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+    return matchQuery.isEmpty
+        ? const Center(
+            child: Text(
+              'No Items',
+              style: TextStyle(fontSize: 18),
             ),
-          ),
-        );
-      },
-      separatorBuilder: (context, index) => const Divider(
-        color: Colors.green,
-        thickness: 1,
-      ),
-    );
+          )
+        : ListView.separated(
+            itemCount: matchQuery.length,
+            itemBuilder: (context, index) {
+              var result = matchQuery[index];
+              return InkWell(
+                onTap: () {
+                  var syskey = generatesyskey();
+                  final StockDetail stockDetail = StockDetail(
+                      syskey: syskey,
+                      stkId: result.id,
+                      stkName: result.name,
+                      qty: 1,
+                      stkprice: result.price,
+                      amount: result.price,
+                      status: 0);
+                  stockOrderProvider.addStockOrderItem(stockDetail);
+                  Navigator.of(context).pop();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        '${result.id}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        result.name!,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        '${thousandsSeparatorsFormat(result.price!)} MMK',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(
+              color: Colors.green,
+              thickness: 1,
+            ),
+          );
   }
 
 // last overwrite to show the
@@ -114,56 +121,63 @@ class CustomSearchDelegate extends SearchDelegate {
         matchQuery.add(stockItem);
       }
     }
-    return ListView.separated(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return InkWell(
-          onTap: () {
-            var syskey = generatesyskey();
-            final StockDetail stockDetail = StockDetail(
-                syskey: syskey,
-                stkId: result.id,
-                stkName: result.name,
-                qty: 1,
-                stkprice: result.price,
-                amount: result.price,
-                status: 0);
-            stockOrderProvider.addStockOrderItem(stockDetail);
-            Navigator.of(context).pop();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  '${result.id}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  result.name!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  '${thousandsSeparatorsFormat(result.price!)} MMK',
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+    return matchQuery.isEmpty
+        ? const Center(
+            child: Text(
+              'No Items',
+              style: TextStyle(fontSize: 18),
             ),
-          ),
-        );
-      },
-      separatorBuilder: (context, index) => const Divider(
-        color: Colors.green,
-        thickness: 1,
-      ),
-    );
+          )
+        : ListView.separated(
+            itemCount: matchQuery.length,
+            itemBuilder: (context, index) {
+              var result = matchQuery[index];
+              return InkWell(
+                onTap: () {
+                  var syskey = generatesyskey();
+                  final StockDetail stockDetail = StockDetail(
+                      syskey: syskey,
+                      stkId: result.id,
+                      stkName: result.name,
+                      qty: 1,
+                      stkprice: result.price,
+                      amount: result.price,
+                      status: 0);
+                  stockOrderProvider.addStockOrderItem(stockDetail);
+                  Navigator.of(context).pop();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        '${result.id}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        result.name!,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        '${thousandsSeparatorsFormat(result.price!)} MMK',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(
+              color: Colors.green,
+              thickness: 1,
+            ),
+          );
   }
 }

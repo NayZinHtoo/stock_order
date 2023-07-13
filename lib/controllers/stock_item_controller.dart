@@ -10,7 +10,7 @@ class StockItemListController {
   Future<int> retrieveStockItemCount() async {
     db = await StockDB.db.database;
     final List<Map<String, Object?>> queryResult = await db.query('stock_item');
-    return queryResult.map((e) => StockItem.fromMap(e)).toList().length;
+    return queryResult.map((e) => StockItem.fromJson(e)).toList().length;
   }
 
   // retrieve data
@@ -21,7 +21,7 @@ class StockItemListController {
       where: 'status = ? ',
       whereArgs: [0],
     );
-    return queryResult.map((e) => StockItem.fromMap(e)).toList();
+    return queryResult.map((e) => StockItem.fromJson(e)).toList();
   }
 
   // retrieve data by category
@@ -32,7 +32,7 @@ class StockItemListController {
       where: 'category = ? and status = ?',
       whereArgs: [ctegory, 0],
     );
-    return queryResult.map((e) => StockItem.fromMap(e)).toList();
+    return queryResult.map((e) => StockItem.fromJson(e)).toList();
   }
 
   //update data
@@ -40,7 +40,7 @@ class StockItemListController {
     db = await StockDB.db.database;
     await db.update(
       'stock_item',
-      stockItem.toMap(),
+      stockItem.toJson(),
       where: 'id = ?',
       whereArgs: [stockItem.id],
     );

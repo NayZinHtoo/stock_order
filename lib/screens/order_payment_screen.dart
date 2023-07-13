@@ -30,10 +30,8 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
   late StockOrderViewProvider stockOrderViewProvider;
   List<StockOrderPayment> orderPaymentList = [];
 
-  static double saleTotalAmount = 0.0;
   static List<PosPayment> posPaymentDropdownData = [];
   static List<double> paymentData = [];
-  double subTotal = 0.0;
 
   Widget _listView() {
     var list = _getPaymentWidgets();
@@ -56,14 +54,19 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
         child: Row(
           children: [
             Expanded(
-              child: DynamicPaymentWidget(index: i),
+              child: DynamicPaymentWidget(
+                index: i,
+                notifyParent: (int i) {
+                  refresh(i);
+                },
+              ),
             ),
-            const SizedBox(
-              width: 16,
-            ),
-            posPaymentDropdownData.length == i + 1
-                ? _addRemoveButton(true, i)
-                : _addRemoveButton(false, i),
+            // const SizedBox(
+            //   width: 16,
+            // ),
+            // posPaymentDropdownData.length == i + 1
+            //     ? _addRemoveButton(true, i)
+            //     : _addRemoveButton(false, i),
           ],
         ),
       ));
@@ -75,7 +78,7 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
     return InkWell(
       onTap: () {
         if (add) {
-          subTotal = 0.0;
+          double subTotal = 0.0;
           for (var i = 0; i < paymentData.length; i++) {
             subTotal += paymentData[i];
           }
@@ -99,11 +102,34 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Icon(
-          (add) ? Icons.add : Icons.close,
+          (add) ? Icons.check : Icons.close,
           color: Colors.white,
         ),
       ),
     );
+  }
+
+  refresh(int index) {
+    double subTotal = 0.0;
+    if (index == paymentData.length - 1) {
+      for (var i = 0; i < paymentData.length; i++) {
+        subTotal += paymentData[i];
+      }
+      posPaymentDropdownData.add(posPayment!);
+      paymentData.add(widget.totalAmount - subTotal);
+    } else {
+      for (var i = 0; i < paymentData.length - 1; i++) {
+        subTotal += paymentData[i];
+      }
+      subTotal = widget.totalAmount - subTotal;
+      if (subTotal != 0) {
+        paymentData[paymentData.length - 1] = subTotal;
+      } else {
+        posPaymentDropdownData.removeAt(paymentData.length - 1);
+        paymentData.removeAt(paymentData.length - 1);
+      }
+    }
+    setState(() {});
   }
 
   @override
@@ -119,8 +145,6 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
     Future.delayed(Duration.zero, () async {
       await stockOrderPaymentProvider.setValidAmount(true);
     });
-
-    saleTotalAmount = widget.totalAmount;
 
     Future.delayed(Duration.zero, () async {
       await _getPaymentList();
@@ -385,10 +409,12 @@ class _OrderPaymentSreenState extends State<OrderPaymentSreen> {
 
 class DynamicPaymentWidget extends StatefulWidget {
   final int index;
+  final Function(int index) notifyParent;
 
   const DynamicPaymentWidget({
     super.key,
     required this.index,
+    required this.notifyParent,
   });
 
   @override
@@ -476,19 +502,7 @@ class _DynamicPaymentWidgetState extends State<DynamicPaymentWidget> {
                 changedValueAmount = double.parse(value);
                 _OrderPaymentSreenState.paymentData[widget.index] =
                     changedValueAmount;
-                var sumAmount = 0.0;
-                for (var i = 0;
-                    i < _OrderPaymentSreenState.paymentData.length;
-                    i++) {
-                  sumAmount += _OrderPaymentSreenState.paymentData[i];
-                }
-                if (sumAmount == _OrderPaymentSreenState.saleTotalAmount) {
-                  Provider.of<StockOrderPaymentProvider>(context, listen: false)
-                      .setValidAmount(true);
-                } else {
-                  Provider.of<StockOrderPaymentProvider>(context, listen: false)
-                      .setValidAmount(false);
-                }
+                widget.notifyParent(widget.index);
               });
             },
           ),
